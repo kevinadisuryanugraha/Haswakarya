@@ -11,11 +11,11 @@ import { getMaritimeIcon } from '@/lib/icons';
 
 export function BusinessScope() {
   return (
-    <section id="services" className="py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden bg-grid-lines scroll-mt-24 md:scroll-mt-28">
+    <section id="services" className="py-14 sm:py-18 lg:py-24 bg-white relative overflow-hidden bg-grid-lines scroll-mt-24 md:scroll-mt-28">
       {/* Grainient Analog Texture Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-14">
           <span className="soe-tag mb-3 inline-block text-xs font-bold tracking-widest uppercase shadow-xs">
@@ -168,7 +168,7 @@ export function RecruitmentPipeline() {
   };
 
   return (
-    <section id="pipeline" className="py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 bg-navy relative overflow-hidden text-white scroll-mt-24 md:scroll-mt-28">
+    <section id="pipeline" className="py-14 sm:py-18 lg:py-24 bg-navy relative overflow-hidden text-white scroll-mt-24 md:scroll-mt-28">
       {/* Grainient Organic Analog Texture Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
@@ -183,7 +183,7 @@ export function RecruitmentPipeline() {
         <path d="M0 0L263 298V1.20973L0 0Z" fill="#407997" />
       </svg>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         
         {/* ============================================================= */}
         {/* SECTION HEADER                                                */}

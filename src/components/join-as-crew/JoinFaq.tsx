@@ -36,7 +36,7 @@ export function JoinFaq() {
 
   return (
     <section id="faq" className="relative bg-white py-14 sm:py-18 lg:py-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <div className="mb-8 sm:mb-10">
           <div className="soe-tag mb-4">
             <HelpCircle className="w-3.5 h-3.5" />

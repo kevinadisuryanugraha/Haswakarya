@@ -82,7 +82,7 @@ export const HeroSlider: React.FC<HeroSliderProps> = () => {
       {/* ------------------------------------------------------------- */}
       {/* Layer 3: Main Calm Sovereign Content Container                */}
       {/* ------------------------------------------------------------- */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 w-full pt-28 sm:pt-36 lg:pt-40 pb-20 sm:pb-28 lg:pb-36">
+      <div className="relative site-container z-10 w-full pt-28 sm:pt-36 lg:pt-40 pb-20 sm:pb-28 lg:pb-36">
         <div className="max-w-3xl lg:max-w-3xl">
           
           {/* Institutional Government & Regulatory Accreditation Badge */}

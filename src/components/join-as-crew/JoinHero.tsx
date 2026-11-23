@@ -19,7 +19,7 @@ export function JoinHero() {
     <section id="hero" className="relative overflow-hidden bg-[#06122A]">
       <div className="absolute inset-0 bg-grain opacity-35 pointer-events-none" aria-hidden="true" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-36 lg:pt-40 pb-14 sm:pb-20 lg:pb-24">
+      <div className="relative site-container pt-28 sm:pt-36 lg:pt-40 pb-14 sm:pb-20 lg:pb-24">
         <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
             <li>

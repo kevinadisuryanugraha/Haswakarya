@@ -9,6 +9,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { COMPANY_INFO } from "@/data/haswakarya-data";
+import { Container } from "./Container";
 
 export const TopBar: React.FC = () => {
   return (
@@ -16,7 +17,7 @@ export const TopBar: React.FC = () => {
       aria-label="Corporate quick contacts and compliance credentials"
       className="w-full bg-[#06122A] text-slate-300 border-b border-navy-800 text-xs font-medium"
     >
-      <div className="max-w-7xl xl:max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-row items-center justify-between gap-3 sm:gap-4 min-h-[38px]">
+      <Container className="py-2 flex flex-row items-center justify-between gap-3 sm:gap-4 min-h-[38px]">
         {/* Left Side: Corporate Communication Channels */}
         <div className="flex items-center gap-3 sm:gap-4 xl:gap-5 min-w-0">
           {/* WhatsApp 24/7 Hotline */}
@@ -107,7 +108,7 @@ export const TopBar: React.FC = () => {
             <span>GMT+7 (WIB) Active</span>
           </div>
         </div>
-      </div>
+      </Container>
     </aside>
   );
 };

@@ -37,12 +37,12 @@ export function FleetTypesShowcase() {
     <section
       id="fleet"
       aria-label="Haswakarya Specialized Fleet Manning Capabilities"
-      className="py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28"
+      className="py-14 sm:py-18 lg:py-24 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28"
     >
       {/* Grainient Analog Texture Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         
         {/* ============================================================= */}
         {/* Section Header                                                */}

@@ -10,11 +10,11 @@ import { getMaritimeIcon } from '@/lib/icons';
 
 export function QualificationsBento() {
   return (
-    <section id="qualifications" className="py-20 px-4 sm:px-6 lg:px-8 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28">
+    <section id="qualifications" className="py-20 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28">
       {/* Grainient Texture Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         {/* Section header */}
         <div className="text-center mb-10 sm:mb-14">
           <span className="soe-tag mb-4 inline-block text-xs tracking-widest uppercase shadow-xs">Seafarer Standards</span>
@@ -163,7 +163,7 @@ const WHY_US_KPIS: Record<string, string> = {
 
 export function WhyChooseUs() {
   return (
-    <section id="why-us" className="py-20 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden bg-grid-lines scroll-mt-24 md:scroll-mt-28">
+    <section id="why-us" className="py-20 bg-white relative overflow-hidden bg-grid-lines scroll-mt-24 md:scroll-mt-28">
       {/* Grainient Texture Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-35 z-0" aria-hidden="true" />
 
@@ -176,7 +176,7 @@ export function WhyChooseUs() {
         <span className="block text-slate-400 font-bold">JAKARTA OPERATIONS &amp; DGST AUDIT DESK</span>
       </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         {/* Header */}
         <div className="text-center mb-14">
           <span className="soe-tag mb-4 inline-block text-xs tracking-widest uppercase shadow-xs">Why Haswakarya</span>

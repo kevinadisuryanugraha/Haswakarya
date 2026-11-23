@@ -13,7 +13,7 @@ export function SplitCTA() {
       {/* Grainient Texture Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="site-container relative z-10">
         <div className="cta-split grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden shadow-xl border border-slate-200">
           {/* Left: Action & Narrative shape */}
           <div className="lg:col-span-7 cta-left__shape bg-navy text-white p-7 sm:p-10 lg:p-14 flex flex-col justify-center relative z-10">
@@ -166,7 +166,7 @@ export function Footer() {
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-50 z-0" aria-hidden="true" />
 
       {/* Main Footer Container */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 relative z-10">
+      <div className="site-container pt-16 pb-12 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
           {/* Col 1: Identity & Legal Foundation */}
           <div className="sm:col-span-2 lg:col-span-1">
@@ -290,7 +290,7 @@ export function Footer() {
 
       {/* Sub-Footer Copyright & Safe-Area Padding for Mobile Dock */}
       <div className="border-t border-white/10 pb-28 sm:pb-32 lg:pb-10 pt-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50 text-center sm:text-left">
+        <div className="site-container flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50 text-center sm:text-left">
           <p>
             © {currentYear} <strong>PT HASWAKARYA ANDALAN SEDARE</strong>. All rights reserved. Registered under Ministry of Transportation RI (SIUKAK) &amp; MLC 2006 Standard.
           </p>

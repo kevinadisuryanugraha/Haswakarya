@@ -11,11 +11,11 @@ export function LegalModalViewer() {
 
   return (
     <>
-      <section id="legals" className="py-20 px-4 sm:px-6 lg:px-8 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28">
+      <section id="legals" className="py-20 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28">
         {/* Grainient Texture Overlay */}
         <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="site-container relative z-10">
           {/* Header */}
           <div className="text-center mb-14">
             <span className="soe-tag mb-4 inline-block text-xs tracking-widest uppercase shadow-xs">Legal Certifications</span>
@@ -231,7 +231,7 @@ export function PartnerMarquee() {
 
   return (
     <section className="py-14 bg-white border-y border-border-light overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 mb-8 text-center">
+      <div className="site-container mb-8 text-center">
         <p className="text-muted text-sm uppercase tracking-widest font-semibold">
           International Standards &amp; Official Accreditations
         </p>

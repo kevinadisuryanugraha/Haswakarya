@@ -74,7 +74,7 @@ export default function JoinAsCrewPage() {
         <section id="apply" className="relative bg-surface py-14 sm:py-18 lg:py-24 scroll-mt-24">
           <div className="absolute inset-0 bg-grain opacity-40 pointer-events-none" aria-hidden="true" />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative site-container">
             <div className="max-w-3xl mb-8 sm:mb-10">
               <div className="soe-tag mb-4">
                 <FileText className="w-3.5 h-3.5" />

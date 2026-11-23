@@ -36,6 +36,21 @@
 }
 
 /* Base Styles & Resets */
+@layer components {
+  /*
+   * Lebar konten tunggal untuk seluruh situs publik.
+   *
+   * Header, TopBar, setiap section beranda, CTA, footer, dan halaman
+   * Join as Crew memakai kelas ini supaya tepi kiri/kanan presisi dan
+   * tidak bergeser saat digulir (dulu campur max-w-7xl / 6xl / 5xl,
+   * bahkan 2xl:max-w-[1440px], sehingga selisihnya sampai 128px).
+   *
+   * Padanan komponen: `src/components/layout/Container.tsx`.
+   */
+  .site-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;

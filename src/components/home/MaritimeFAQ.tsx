@@ -141,13 +141,13 @@ export function MaritimeFAQ() {
   return (
     <section
       id="faq"
-      className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28"
+      className="py-16 sm:py-20 lg:py-28 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28"
       aria-label="Frequently Asked Questions on Crew Manning & Maritime Compliance"
     >
       {/* Grainient Analog Texture Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
-      <div className="max-w-5xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         
         {/* ============================================================= */}
         {/* Section Header                                                */}

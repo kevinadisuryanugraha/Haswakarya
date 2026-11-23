@@ -49,7 +49,7 @@ export function AboutAndVision() {
   return (
     <section
       id="about"
-      className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28"
+      className="py-16 sm:py-20 lg:py-28 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28"
       aria-label="About Haswakarya Crew Agency & Corporate Vision"
     >
       {/* Grainient Analog Texture Overlay */}
@@ -64,7 +64,7 @@ export function AboutAndVision() {
         <span className="block text-slate-400 font-bold">STRAIT OF MALACCA OPERATIONAL HUB</span>
       </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         
         {/* ============================================================= */}
         {/* Section Header                                                */}

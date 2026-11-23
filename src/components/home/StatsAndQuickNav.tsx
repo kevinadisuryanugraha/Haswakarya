@@ -13,9 +13,9 @@ export function StatsOverlap() {
   return (
     <section 
       aria-label="Haswakarya Key Metrics & Compliance Standards" 
-      className="relative z-20 px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-12 md:-mt-16 lg:-mt-20 transition-all"
+      className="relative z-20 -mt-6 sm:-mt-12 md:-mt-16 lg:-mt-20 transition-all"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="site-container">
         <div className="bg-navy border border-white/20 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-white/10">
             {STATS_DATA.map((stat, idx) => (
@@ -60,11 +60,11 @@ export function QuickNavCards() {
   };
 
   return (
-    <section className="py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 bg-surface relative overflow-hidden">
+    <section className="py-14 sm:py-18 lg:py-24 bg-surface relative overflow-hidden">
       {/* Grainient subtle texture */}
       <div className="absolute inset-0 pointer-events-none bg-grain opacity-40 z-0" aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         {/* Section Heading */}
         <div className="text-center mb-10 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-3 shadow-xs">
