@@ -270,44 +270,7 @@ h1, h2, h3, h4, h5, h6 {
   clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
 }
 
-/* 2. Split Diagonal CTA Banner */
-.cta-split {
-  display: flex;
-  position: relative;
-  overflow: hidden;
-  border-radius: 15px;
-}
-
-.cta-left__shape {
-  clip-path: polygon(0 0, 95% 0, 100% 100%, 0 100%);
-}
-
-.clip-cta-shape {
-  clip-path: polygon(0 0, 95% 0, 100% 100%, 0 100%);
-}
-
-@media (max-width: 768px) {
-  .cta-split {
-    flex-direction: column;
-    min-height: auto;
-  }
-
-  .cta-left__shape {
-    clip-path: none;
-    padding: 36px 24px !important;
-  }
-
-  .cta-split > div:last-child {
-    margin-left: 0;
-    height: 260px;
-  }
-
-  .cta-split img {
-    height: 260px;
-  }
-}
-
-/* 3. Card Lift Hover Micro-Interaction */
+/* 2. Card Lift Hover Micro-Interaction */
 .card-lift {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
