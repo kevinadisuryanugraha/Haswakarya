@@ -17,6 +17,8 @@ import {
   Sparkles
 } from 'lucide-react';
 
+import { CREW_STAGE_COLUMNS, nextCrewStage } from '@/lib/ats/stageOrder';
+
 interface TriageDraftView {
   summary: string;
   strengths: string[];
@@ -43,15 +45,6 @@ interface NarrativeEntry {
   model?: string | null;
   narrativeAt?: string | null;
 }
-
-const STAGES = [
-  { id: 'APPLIED', title: 'Berkas Masuk', color: 'border-slate-200 bg-slate-50/70', badge: 'bg-slate-100 text-slate-700' },
-  { id: 'DOCUMENT_VERIFIED', title: 'STCW Hubla Sah', color: 'border-sky-200 bg-sky-50/40', badge: 'bg-sky-100 text-sky-800' },
-  { id: 'TECHNICAL_INTERVIEW', title: 'Interview Port Capt', color: 'border-indigo-200 bg-indigo-50/40', badge: 'bg-indigo-100 text-indigo-800' },
-  { id: 'MARLINS_ASSESSMENT', title: 'Ujian Marlins (>=80%)', color: 'border-amber-200 bg-amber-50/40', badge: 'bg-amber-100 text-amber-800' },
-  { id: 'OWNER_VETTING', title: 'Shipowner Vetting', color: 'border-purple-200 bg-purple-50/40', badge: 'bg-purple-100 text-purple-800' },
-  { id: 'ONBOARD_DEPLOYED', title: 'Onboard Berlayar', color: 'border-emerald-200 bg-emerald-50/40', badge: 'bg-emerald-100 text-emerald-800' },
-];
 
 export default function CrewingAtsPage() {
   const [applications, setApplications] = useState<any[]>([]);
@@ -81,11 +74,8 @@ export default function CrewingAtsPage() {
   }, []);
 
   const handleAdvanceStage = async (appId: string, currentStage: string) => {
-    const stageOrder = ['APPLIED', 'DOCUMENT_VERIFIED', 'TECHNICAL_INTERVIEW', 'MARLINS_ASSESSMENT', 'OWNER_VETTING', 'ONBOARD_DEPLOYED'];
-    const currentIndex = stageOrder.indexOf(currentStage);
-    if (currentIndex >= stageOrder.length - 1) return;
-
-    const nextStage = stageOrder[currentIndex + 1];
+    const nextStage = nextCrewStage(currentStage);
+    if (!nextStage) return;
 
     try {
       setUpdatingId(appId);
@@ -241,8 +231,8 @@ export default function CrewingAtsPage() {
       </div>
 
       {/* Kanban Board Columns */}
-      <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-6 snap-x snap-mandatory md:mx-0 md:grid md:grid-cols-2 md:items-start md:overflow-visible md:px-0 md:pb-8 lg:grid-cols-3 xl:grid-cols-6">
-        {STAGES.map((col) => {
+      <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-6 snap-x snap-mandatory md:mx-0 md:grid md:grid-cols-2 md:items-start md:overflow-visible md:px-0 md:pb-8 lg:grid-cols-3 2xl:grid-cols-5">
+        {CREW_STAGE_COLUMNS.map((col) => {
           const colApps = applications.filter((a) => a.currentStage === col.id);
 
           return (
@@ -486,7 +476,7 @@ export default function CrewingAtsPage() {
                           <ExternalLink className="w-3 h-3" />
                         </Link>
 
-                        {col.id !== 'ONBOARD_DEPLOYED' && (
+                        {nextCrewStage(col.id) && (
                           <button
                             onClick={() => handleAdvanceStage(app.id, app.currentStage)}
                             disabled={isUpdating}

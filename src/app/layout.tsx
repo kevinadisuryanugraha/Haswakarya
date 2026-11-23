@@ -91,7 +91,7 @@ const schemaOrg = {
       name: COMPANY_INFO.brandName,
       legalName: COMPANY_INFO.entityName,
       description: COMPANY_INFO.about,
-      foundingDate: '2024-02',
+      foundingDate: '2026-02',
       address: [
         {
           '@type': 'PostalAddress',
@@ -127,7 +127,7 @@ const schemaOrg = {
       name: COMPANY_INFO.entityName,
       legalName: COMPANY_INFO.entityName,
       taxID: COMPANY_INFO.nib,
-      foundingDate: '2024-02',
+      foundingDate: '2026-02',
       areaServed: { '@type': 'GeoCircle', geoMidpoint: { '@type': 'GeoCoordinates', latitude: 1.11222, longitude: 103.97444 } },
       knowsAbout: ['Maritime Industry', 'Crew Manning', 'Seafarer Welfare', 'Indonesian Maritime'],
     },

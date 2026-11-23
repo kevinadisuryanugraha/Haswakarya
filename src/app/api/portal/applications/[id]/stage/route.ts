@@ -4,18 +4,7 @@ import { getCurrentUser } from '@/lib/auth/session';
 import { CrewStage } from '@prisma/client';
 import { hasCapability } from '@/lib/auth/rbac';
 import { withApiMetrics } from '@/lib/observability/withApiMetrics';
-
-const STAGE_ORDER: CrewStage[] = [
-  'APPLIED',
-  'DOCUMENT_VERIFIED',
-  'TECHNICAL_INTERVIEW',
-  'MARLINS_ASSESSMENT',
-  'OWNER_VETTING',
-  'MCU_CLEARANCE',
-  'PKL_SIGNING',
-  'ONBOARD_DEPLOYED',
-  'SIGN_OFF_LEAVE',
-];
+import { crewStageDirection } from '@/lib/ats/stageOrder';
 
 async function handlePATCH(
   req: NextRequest,
@@ -73,10 +62,10 @@ async function handlePATCH(
       );
     }
 
-    const targetIndex = STAGE_ORDER.indexOf(nextStage as CrewStage);
-    const currentIndex = STAGE_ORDER.indexOf(previousStage);
-    const isBackward =
-      targetIndex !== -1 && currentIndex !== -1 && targetIndex < currentIndex;
+    // Arah perpindahan dihitung dari modul bersama, sumber yang sama dengan
+    // kolom kanban, supaya urutan tahap tidak pernah berbeda antar tempat.
+    const direction = crewStageDirection(previousStage, nextStage);
+    const isBackward = direction === 'backward';
 
     if (isBackward && !hasCapability(user.role, 'portal.admin')) {
       return NextResponse.json(

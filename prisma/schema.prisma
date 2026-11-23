@@ -284,6 +284,7 @@ enum CrewStage {
   MARLINS_ASSESSMENT  // Ujian Bahasa Inggris Maritim
   OWNER_VETTING       // Pengajuan Matrix ke Principal / Shipowner
   MCU_CLEARANCE       // Pemeriksaan Kesehatan P&I Club
+  VISA_PROCESSING     // Pengurusan visa, endorsement flag state, dan dokumen pra-berangkat
   PKL_SIGNING         // Penandatanganan Kontrak PKL & Sign-On
   ONBOARD_DEPLOYED    // Sedang Berlayar
   SIGN_OFF_LEAVE      // Selesai Kontrak / Cuti

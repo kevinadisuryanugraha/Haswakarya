@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { BUSINESS_SCOPES, RECRUITMENT_STAGES, getWhatsAppUrl } from '@/data/haswakarya-data';
 import {
   CheckCircle2, ArrowRight,
-  ChevronRight, ChevronLeft, Clock, ShieldCheck,
+  ChevronRight, ChevronLeft, ShieldCheck,
   Compass, Ship
 } from 'lucide-react';
 import { getMaritimeIcon } from '@/lib/icons';
@@ -334,12 +334,6 @@ export function RecruitmentPipeline() {
                       </span>
                     </div>
 
-                    {stage.duration && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] sm:text-xs font-semibold bg-white/10 text-white/80 border border-white/15">
-                        <Clock className="w-3 h-3 text-accent shrink-0" />
-                        <span>{stage.duration}</span>
-                      </span>
-                    )}
                   </div>
 
                   {/* Stage Icon & Subtitle Tag */}
@@ -434,7 +428,7 @@ export function RecruitmentPipeline() {
 
         {/* Regulatory Compliance Footnote Banner */}
         <div className="mt-8 p-3.5 rounded-xl bg-white/5 border border-white/10 text-center text-xs text-white/70">
-          Semua proses rekrutmen dan penempatan awak kapal Haswakarya dijalankan secara transparan di bawah legalitas <strong>SIUKAK Kemenhub RI &amp; NIB 0702240024481</strong> sesuai standar perlindungan tenaga kerja <strong>ILO MLC 2006 Regulation 1.4</strong>.
+          Every Haswakarya recruitment and placement stage runs transparently under the licence <strong>SIUKAK Kemenhub RI &amp; NIB 0702240024481</strong> and worker protection standard <strong>ILO MLC 2006 Regulation 1.4</strong>.
         </div>
 
       </div>

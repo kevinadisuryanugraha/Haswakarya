@@ -81,7 +81,6 @@ export interface RecruitmentStageItem {
   description: string;
   iconName: string;
   badge?: string;
-  duration?: string;
 }
 
 export interface WhyChooseUsItem {
@@ -171,7 +170,7 @@ export const COMPANY_INFO: CompanyInfo = {
   entityName: "PT HASWAKARYA ANDALAN SEDARE",
   brandName: "HASWAKARYA CREW AGENCY",
   subtitle: "Crew Manning Agency",
-  since: "February 2024",
+  since: "February 2026",
   presentedBy: "Jakarta Office",
   about:
     "Haswakarya crew agency was founded on a simple belief Indonesian seafarers are among the best in the world and deserve the best bridge to the global stage. As a Crew Manning Agency, we are committed to delivering a recruitment process that is transparent, professional, and with integrity. We manage every aspect to international standards — from certification and experience to crew welfare. To us, every seafarer is an ambassador of the nation, and every vessel that sails is a trust that we must uphold.",
@@ -390,7 +389,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Active candidate sourcing from our verified maritime database, alumni networks, and targeted social media campaigns.",
     iconName: "Search",
     badge: "Initial Screening",
-    duration: "Day 1-2",
   },
   {
     step: 2,
@@ -401,7 +399,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Thorough validation of Seaman Books, Passports, STCW Competency & Proficiency Certificates against national and international registries.",
     iconName: "FileCheck",
     badge: "Strict Audit",
-    duration: "Day 2-3",
   },
   {
     step: 3,
@@ -412,7 +409,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Standardized Marlins English Language Test to ensure clear, flawless maritime communication and safety comprehension onboard.",
     iconName: "Award",
     badge: "Standardized",
-    duration: "Day 3-4",
   },
   {
     step: 4,
@@ -423,7 +419,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Rigorous technical assessment and behavioral interview conducted by senior Master Mariners and Chief Engineers.",
     iconName: "UserCheck",
     badge: "Internal Vetting",
-    duration: "Day 4-5",
   },
   {
     step: 5,
@@ -434,7 +429,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Coordination of direct candidate interview with the shipowner or crewing superintendent for final technical authorization.",
     iconName: "Video",
     badge: "Client Approval",
-    duration: "Day 6-7",
   },
   {
     step: 6,
@@ -445,7 +439,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Comprehensive medical examination at DGST and flag-state approved maritime hospitals ensuring full fitness for seafaring service.",
     iconName: "Stethoscope",
     badge: "Health Clearance",
-    duration: "Day 7-9",
   },
   {
     step: 7,
@@ -456,7 +449,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Full handling of flag state endorsements, transit visas, seafarer transit documents, and immigration authorizations.",
     iconName: "Stamp",
     badge: "Consular Handling",
-    duration: "Day 9-14",
   },
   {
     step: 8,
@@ -467,7 +459,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Seafarer's Employment Agreement (SEA) execution under MLC 2006 terms, owner-specific CBT, and comprehensive departure briefing.",
     iconName: "Briefcase",
     badge: "Deployment Ready",
-    duration: "Day 14-16",
   },
   {
     step: 9,
@@ -478,7 +469,6 @@ export const RECRUITMENT_STAGES: RecruitmentStageItem[] = [
       "Active monitoring and liaison with vessel command during the seafarer's first 14 days onboard to ensure seamless operational integration.",
     iconName: "CheckCircle2",
     badge: "Quality Guarantee",
-    duration: "Day 1-14 Onboard",
   },
 ];
 

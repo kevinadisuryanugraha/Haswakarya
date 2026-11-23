@@ -82,49 +82,49 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'crew-zero-fee',
     category: 'seafarers',
     badge: 'Ethical Charter',
-    question: 'Apakah ada pungutan biaya pendaftaran, administrasi, atau penempatan untuk pelaut?',
+    question: 'Does Haswakarya charge seafarers any registration, administration, or placement fee?',
     answer:
-      'SAMA SEKALI TIDAK ADA (100% GRATIS). Berdasarkan ILO MLC 2006 Regulation 1.4.5 dan Pasal 36 Permenhub RI No. PM 59/2021 (SIUKAK), PT Haswakarya Andalan Sedare melarang keras segala bentuk pungutan biaya rekrutmen atau penempatan kepada pelaut. Seluruh biaya penempatan dan keagenan ditanggung sepenuhnya oleh Shipowner resmi.',
+      'ABSOLUTELY NONE (100% FREE). Under ILO MLC 2006 Regulation 1.4.5 and Article 36 of Indonesian Ministry of Transport Regulation PM 59/2021 (SIUKAK), PT Haswakarya Andalan Sedare strictly prohibits any recruitment or placement fee charged to seafarers. All placement and agency costs are borne in full by the hiring shipowner.',
   },
   {
     id: 'crew-marlins',
     category: 'seafarers',
-    badge: 'Standar Marlins',
-    question: 'Berapa standar nilai Marlins English Test yang disyaratkan untuk bergabung?',
+    badge: 'Marlins Standard',
+    question: 'What Marlins English Test score is required to join?',
     answer:
-      'Untuk perwira (Deck & Engine Officers: Management & Operational Level), skor minimal Marlins adalah 80%. Untuk rating (AB, Oiler, Bosun, Cook), standar minimal adalah 70%. Jika nilai Marlins Anda belum memenuhi atau kedaluwarsa, kami menyediakan fasilitas pengujian persiapan di kantor kami.',
+      'For officers (deck and engine, management and operational level) the minimum Marlins score is 80%. For ratings (AB, Oiler, Bosun, Cook) the minimum is 70%. If your Marlins result is below the threshold or has expired, we provide a preparatory testing facility at our office.',
   },
   {
     id: 'crew-pkl',
     category: 'seafarers',
-    badge: 'Legalitas PKL',
-    question: 'Bagaimana keabsahan kontrak kerja laut (PKL) dan perlindungan asuransi kru?',
+    badge: 'SEA Legality',
+    question: 'How legitimate is the Seafarer Employment Agreement (SEA) and how is crew insurance protected?',
     answer:
-      'Setiap pelaut Haswakarya menandatangani Perjanjian Kerja Laut (PKL) berstandar Tripartit resmi yang disahkan oleh Pejabat Syahbandar/KSOP Kemenhub RI. Hak gaji, uang lembur, jaminan asuransi kesehatan, dan asuransi P&I Club untuk repatriasi darurat terjamin secara hukum internasional.',
+      'Every Haswakarya seafarer signs a tripartite Seafarer Employment Agreement (SEA/PKL) endorsed by the Indonesian Harbour Master (KSOP, Ministry of Transport). Wages, overtime, medical cover, and P&I Club insurance for emergency repatriation are guaranteed under international maritime law.',
   },
   {
     id: 'crew-medical',
     category: 'seafarers',
     badge: 'Medical Check-Up',
-    question: 'Di klinik mana pelaut harus melakukan pemeriksaan kesehatan (MCU)?',
+    question: 'At which clinic must seafarers complete the medical check-up (MCU)?',
     answer:
-      'Medical Check-Up wajib dilakukan di Balai Kesehatan Kerja Pelayaran (BKKP) atau rumah sakit/laboratorium medis yang memiliki akreditasi resmi Kemenhub RI (DGST Approved) serta disetujui oleh negara bendera kapal (Flag State). MCU meliputi tes bebas narkoba/alkohol dan uji fisik kelayakan laut.',
+      'The medical check-up is performed at a Port Health Centre (BKKP) or a hospital and laboratory holding official Ministry of Transport (DGST) accreditation and accepted by the vessel flag state. The MCU covers drug and alcohol screening plus physical fitness for sea duty.',
   },
   {
     id: 'crew-sea-time',
     category: 'seafarers',
-    badge: 'Pengalaman Berlayar',
-    question: 'Apakah pelaut dengan jam layar terbatas atau rating pemula bisa mendaftar?',
+    badge: 'Sea Service',
+    question: 'Can seafarers with limited sea time or junior ratings still apply?',
     answer:
-      'Bisa. Walaupun posisi perwira senior membutuhkan riwayat jam layar (sea-time) minimal 12–24 bulan di tipe kapal sejenis, Haswakarya juga membuka rekrutmen untuk perwira junior, cadet berprestasi, dan rating berpengalaman (AB/Oiler/Cook) yang memiliki sertifikat STCW 2010 lengkap dan sikap profesional.',
+      'Yes. Senior officer positions require 12-24 months of sea time on a similar vessel type, but Haswakarya also recruits junior officers, high-performing cadets, and experienced ratings (AB, Oiler, Cook) holding complete STCW 2010 certification and a professional attitude.',
   },
   {
     id: 'crew-salary-pay',
     category: 'seafarers',
-    badge: 'Kepastian Gaji',
-    question: 'Bagaimana kepastian pembayaran gaji bulanan dan pengiriman uang ke keluarga?',
+    badge: 'Wage Certainty',
+    question: 'How are monthly wages and family remittances guaranteed?',
     answer:
-      'Gaji dibayarkan tepat waktu secara langsung melalui transfer bank resmi (allotment transfer) sesuai klausul PKL MLC 2006. Pelaut dapat mengatur alokasi pengiriman uang bulanan langsung ke rekening keluarga di Indonesia tanpa potongan yang tidak sah.',
+      'Wages are paid on time by direct bank allotment under the MLC 2006 SEA clause. Seafarers can direct a monthly portion straight to their family account in Indonesia with no unauthorised deductions.',
   },
 ];
 
@@ -209,7 +209,7 @@ export function MaritimeFAQ() {
               }`}
             >
               <Users className="w-4 h-4 text-accent shrink-0" />
-              <span>Untuk Pelaut</span>
+              <span>For Seafarers</span>
             </button>
           </div>
         </div>
