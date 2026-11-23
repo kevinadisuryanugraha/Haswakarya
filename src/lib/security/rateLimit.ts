@@ -123,6 +123,12 @@ export const RATE_LIMIT_BUCKETS = {
   login: { limit: 10, windowMs: 5 * 60 * 1000 },
   /** Vetting shipowner: maksimum 20 keputusan per 10 menit per token. */
   'vetting-decision': { limit: 20, windowMs: 10 * 60 * 1000 },
+  /**
+   * Draf triage AI: maksimum 10 permintaan per jam per pengguna. Kuota gratis
+   * provider hanya 50 permintaan/hari untuk seluruh akun, jadi bucket ini yang
+   * menjaga agar satu staf tidak menghabiskannya.
+   */
+  'ai-triage': { limit: 10, windowMs: 60 * 60 * 1000 },
 } as const;
 
 export type RateLimitBucket = keyof typeof RATE_LIMIT_BUCKETS;
@@ -136,11 +142,15 @@ export const loginLimiter = createRateLimiter(RATE_LIMIT_BUCKETS.login);
 /** Vetting shipowner: maksimum 20 keputusan per 10 menit per token. */
 export const vettingDecisionLimiter = createRateLimiter(RATE_LIMIT_BUCKETS['vetting-decision']);
 
+/** Draf triage AI: maksimum 10 permintaan per jam per pengguna. */
+export const aiTriageLimiter = createRateLimiter(RATE_LIMIT_BUCKETS['ai-triage']);
+
 /** Limiter memori per bucket, dipakai sebagai fallback backend Redis. */
 export const MEMORY_LIMITERS: Record<RateLimitBucket, RateLimiter> = {
   'public-form': publicFormLimiter,
   login: loginLimiter,
   'vetting-decision': vettingDecisionLimiter,
+  'ai-triage': aiTriageLimiter,
 };
 
 /** Mengembalikan header HTTP standar untuk rate limit. */

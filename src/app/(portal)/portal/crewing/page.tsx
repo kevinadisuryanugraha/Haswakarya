@@ -13,8 +13,26 @@ import {
   ExternalLink,
   ChevronRight,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
+
+interface TriageDraftView {
+  summary: string;
+  strengths: string[];
+  gaps: string[];
+  interviewQuestions: string[];
+  confidence: 'low' | 'medium' | 'high';
+}
+
+interface TriageEntry {
+  loading: boolean;
+  error?: string;
+  draft?: TriageDraftView;
+  source?: 'ai' | 'fallback';
+  reason?: string | null;
+  model?: string | null;
+}
 
 const STAGES = [
   { id: 'APPLIED', title: 'Berkas Masuk', color: 'border-slate-200 bg-slate-50/70', badge: 'bg-slate-100 text-slate-700' },
@@ -30,6 +48,7 @@ export default function CrewingAtsPage() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [tokenBusyId, setTokenBusyId] = useState<string | null>(null);
+  const [triage, setTriage] = useState<Record<string, TriageEntry>>({});
 
   const loadApplications = async () => {
     try {
@@ -101,6 +120,45 @@ export default function CrewingAtsPage() {
       console.error('Failed to change vetting token:', err);
     } finally {
       setTokenBusyId(null);
+    }
+  };
+
+  const handleGenerateTriage = async (appId: string) => {
+    setTriage((prev) => ({ ...prev, [appId]: { loading: true } }));
+
+    try {
+      const res = await fetch(`/api/portal/applications/${appId}/triage`, {
+        method: 'POST',
+      });
+      const json = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setTriage((prev) => ({
+          ...prev,
+          [appId]: {
+            loading: false,
+            error: json.error || 'Gagal menyusun draf triage.',
+          },
+        }));
+        return;
+      }
+
+      setTriage((prev) => ({
+        ...prev,
+        [appId]: {
+          loading: false,
+          draft: json.data?.draft,
+          source: json.data?.source,
+          reason: json.data?.reason ?? null,
+          model: json.data?.meta?.model ?? json.data?.ai?.model ?? null,
+        },
+      }));
+    } catch (err) {
+      console.error('Failed to generate triage draft:', err);
+      setTriage((prev) => ({
+        ...prev,
+        [appId]: { loading: false, error: 'Jaringan gagal. Coba lagi.' },
+      }));
     }
   };
 
@@ -233,6 +291,94 @@ export default function CrewingAtsPage() {
                             Revoke
                           </button>
                         </div>
+                      </div>
+
+                      {/* Draf triage: bahan pertimbangan, bukan keputusan */}
+                      <div className="pt-1.5 border-t border-slate-100 space-y-1.5">
+                        <button
+                          onClick={() => handleGenerateTriage(app.id)}
+                          disabled={triage[app.id]?.loading}
+                          title="Susun ringkasan, kekuatan, gap, dan pertanyaan wawancara dari data server"
+                          className="w-full px-2 py-1 rounded border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 text-[10px] font-bold flex items-center justify-center gap-1 transition-colors disabled:opacity-50 cursor-pointer"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          <span>{triage[app.id]?.loading ? 'Menyusun...' : 'AI Ringkasan'}</span>
+                        </button>
+
+                        {triage[app.id]?.error && (
+                          <p className="text-[10px] text-rose-600 leading-snug">
+                            {triage[app.id]?.error}
+                          </p>
+                        )}
+
+                        {triage[app.id]?.draft && (
+                          <div className="rounded border border-slate-200 bg-slate-50 p-2 space-y-1.5">
+                            <div className="flex items-center justify-between gap-1">
+                              <span
+                                className={
+                                  triage[app.id]?.source === 'ai'
+                                    ? 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200'
+                                    : 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 border border-slate-300'
+                                }
+                              >
+                                {triage[app.id]?.source === 'ai' ? 'AI' : 'DETERMINISTIK'}
+                              </span>
+                              <span
+                                className="text-[9px] text-slate-400 truncate max-w-[90px]"
+                                title={triage[app.id]?.model ?? ''}
+                              >
+                                {triage[app.id]?.model ?? 'matrix engine'}
+                              </span>
+                            </div>
+
+                            <p className="text-[10px] text-slate-700 leading-snug">
+                              {triage[app.id]?.draft?.summary}
+                            </p>
+
+                            {(triage[app.id]?.draft?.strengths?.length ?? 0) > 0 && (
+                              <div>
+                                <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-wide">
+                                  Kekuatan
+                                </span>
+                                <ul className="list-disc pl-3.5 text-[10px] text-slate-600 leading-snug">
+                                  {triage[app.id]?.draft?.strengths.map((item, index) => (
+                                    <li key={`s-${index}`}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {(triage[app.id]?.draft?.gaps?.length ?? 0) > 0 && (
+                              <div>
+                                <span className="text-[9px] font-bold text-rose-700 uppercase tracking-wide">
+                                  Gap
+                                </span>
+                                <ul className="list-disc pl-3.5 text-[10px] text-slate-600 leading-snug">
+                                  {triage[app.id]?.draft?.gaps.map((item, index) => (
+                                    <li key={`g-${index}`}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {(triage[app.id]?.draft?.interviewQuestions?.length ?? 0) > 0 && (
+                              <div>
+                                <span className="text-[9px] font-bold text-indigo-700 uppercase tracking-wide">
+                                  Pertanyaan
+                                </span>
+                                <ul className="list-disc pl-3.5 text-[10px] text-slate-600 leading-snug">
+                                  {triage[app.id]?.draft?.interviewQuestions.map((item, index) => (
+                                    <li key={`q-${index}`}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            <p className="text-[9px] text-slate-400 leading-snug border-t border-slate-200 pt-1">
+                              Bahan pertimbangan. Keputusan tetap milik verifikator.
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       {/* Action Advance Stage Button */}
