@@ -1,0 +1,8 @@
+# Berkas yang wajib LF di working tree: skrip shell dijalankan di container
+# Linux (bind-mount), jadi CRLF akan mematahkannya dengan galat ": not found".
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sql text eol=lf
+.gitattributes text eol=lf

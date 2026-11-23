@@ -1,0 +1,57 @@
+{
+  "name": "Haswakarya Crew Agency — PT Haswakarya Andalan Sedare",
+  "short_name": "Haswakarya",
+  "description": "Official Crew Manning Agency in Indonesia. SIUKAK Licensed by Kemenhub RI & MLC 2006 Certified.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#06122A",
+  "theme_color": "#06122A",
+  "categories": [
+    "business",
+    "maritime",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Request Crew",
+      "url": "/#services",
+      "description": "Request certified Indonesian seafarers for your fleet"
+    },
+    {
+      "name": "9-Stage Pipeline",
+      "url": "/#pipeline",
+      "description": "Explore our strict recruitment and vetting process"
+    },
+    {
+      "name": "Verify SIUKAK",
+      "url": "/#legals",
+      "description": "Inspect our official government credentials"
+    },
+    {
+      "name": "24/7 Hotline",
+      "url": "https://wa.me/6285922052112",
+      "description": "Direct WhatsApp connection with operations desk"
+    }
+  ]
+}

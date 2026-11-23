@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 520" width="100%" height="100%">
+  <defs>
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Document Paper Background -->
+  <rect x="15" y="15" width="370" height="490" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)" />
+  <rect x="25" y="25" width="350" height="470" rx="4" fill="#fafafa" stroke="url(#goldBorder)" stroke-width="2" stroke-dasharray="8,4" />
+
+  <!-- Header Emblem / Garuda / Anchor Representation -->
+  <circle cx="200" cy="70" r="28" fill="#0b1b3d" />
+  <path d="M 195 55 L 205 55 L 200 65 Z" fill="#f59e0b" />
+  <circle cx="200" cy="65" r="4" fill="none" stroke="#f59e0b" stroke-width="2" />
+  <line x1="200" y1="69" x2="200" y2="85" stroke="#f59e0b" stroke-width="3" />
+  <path d="M 188 77 Q 200 88 212 77" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" />
+  <line x1="192" y1="72" x2="208" y2="72" stroke="#f59e0b" stroke-width="2.5" />
+
+  <!-- Republic of Indonesia / Ministry Header -->
+  <text x="200" y="115" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#0b1b3d" text-anchor="middle" letter-spacing="1">KEMENTERIAN PERHUBUNGAN</text>
+  <text x="200" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#475569" text-anchor="middle">DIREKTORAT JENDERAL PERHUBUNGAN LAUT</text>
+  <line x1="60" y1="142" x2="340" y2="142" stroke="#0b1b3d" stroke-width="1.5" />
+  <line x1="80" y1="145" x2="320" y2="145" stroke="#f59e0b" stroke-width="0.75" />
+
+  <!-- Title -->
+  <text x="200" y="172" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="900" fill="#0b1b3d" text-anchor="middle" letter-spacing="1.5">SURAT IZIN USAHA</text>
+  <text x="200" y="190" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="bold" fill="#1e3a5f" text-anchor="middle">PEREKRUTAN &amp; PENEMPATAN AWAK KAPAL</text>
+  <text x="200" y="208" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#b45309" text-anchor="middle">(SIUPAK)</text>
+  <text x="200" y="226" font-family="monospace" font-size="9" fill="#64748b" text-anchor="middle">No: SIUPAK.28.14 TAHUN 2021</text>
+
+  <!-- Company Identification -->
+  <rect x="50" y="245" width="300" height="120" rx="4" fill="#f8fafc" stroke="#e2e8f0" />
+  <text x="70" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#334155">Nama Perusahaan :</text>
+  <text x="175" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#0b1b3d">PT HASWAKARYA ARTHA SAMUDERA</text>
+
+  <text x="70" y="292" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#334155">Bidang Usaha :</text>
+  <text x="175" y="292" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#0b1b3d">Crew Manning Agency</text>
+
+  <text x="70" y="314" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#334155">Wilayah Operasi :</text>
+  <text x="175" y="314" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#0b1b3d">Internasional &amp; Domestik</text>
+
+  <text x="70" y="336" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#334155">Status Legalitas :</text>
+  <text x="175" y="336" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#16a34a">TERDAFTAR &amp; AKTIF RESMI</text>
+
+  <!-- Official Stamps & Seal -->
+  <g transform="translate(80, 410)">
+    <circle cx="35" cy="35" r="32" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,2" />
+    <circle cx="35" cy="35" r="26" fill="none" stroke="#2563eb" stroke-width="1" />
+    <text x="35" y="32" font-family="system-ui, sans-serif" font-size="7" font-weight="bold" fill="#2563eb" text-anchor="middle">DEPHUB RI</text>
+    <text x="35" y="42" font-family="system-ui, sans-serif" font-size="6" fill="#2563eb" text-anchor="middle">DITJEN HUBLA</text>
+  </g>
+
+  <!-- Security Hologram Badge -->
+  <g transform="translate(260, 400)">
+    <polygon points="40,5 75,25 75,65 40,85 5,65 5,25" fill="#fef3c7" stroke="#d97706" stroke-width="2" />
+    <polygon points="40,12 68,28 68,60 40,76 12,60 12,28" fill="none" stroke="#b45309" stroke-width="1" />
+    <text x="40" y="44" font-family="system-ui, sans-serif" font-size="8" font-weight="900" fill="#92400e" text-anchor="middle">VERIFIED</text>
+    <text x="40" y="55" font-family="system-ui, sans-serif" font-size="7" font-weight="bold" fill="#b45309" text-anchor="middle">OFFICIAL</text>
+  </g>
+</svg>

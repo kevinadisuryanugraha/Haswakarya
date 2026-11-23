@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="mapBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1b3d" />
+      <stop offset="100%" stop-color="#051329" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="450" rx="12" fill="url(#mapBg)" />
+
+  <!-- Latitude/Longitude Grid Lines -->
+  <g stroke="#1e3a5f" stroke-width="0.75" opacity="0.6">
+    <line x1="0" y1="75" x2="800" y2="75" stroke-dasharray="4,4" />
+    <line x1="0" y1="150" x2="800" y2="150" stroke-dasharray="4,4" />
+    <line x1="0" y1="225" x2="800" y2="225" stroke-width="1.5" stroke="#334e68" />
+    <line x1="0" y1="300" x2="800" y2="300" stroke-dasharray="4,4" />
+    <line x1="0" y1="375" x2="800" y2="375" stroke-dasharray="4,4" />
+
+    <line x1="160" y1="0" x2="160" y2="450" stroke-dasharray="4,4" />
+    <line x1="320" y1="0" x2="320" y2="450" stroke-dasharray="4,4" />
+    <line x1="480" y1="0" x2="480" y2="450" stroke-dasharray="4,4" />
+    <line x1="640" y1="0" x2="640" y2="450" stroke-dasharray="4,4" />
+  </g>
+
+  <!-- Continents simplified stylized silhouettes -->
+  <!-- Americas -->
+  <path d="M 120 70 Q 170 80 180 140 Q 150 180 160 210 Q 180 230 200 270 Q 210 320 180 370 Q 160 340 160 300 Q 140 270 120 230 Q 130 190 100 150 Q 80 110 120 70 Z" fill="#1e293b" opacity="0.8" />
+  <!-- Europe & Africa -->
+  <path d="M 360 80 Q 420 70 440 120 Q 410 140 370 140 Q 360 170 380 220 Q 430 250 430 310 Q 410 370 370 360 Q 340 310 340 260 Q 320 220 330 170 Q 340 120 360 80 Z" fill="#1e293b" opacity="0.8" />
+  <!-- Asia -->
+  <path d="M 440 80 Q 560 60 660 110 Q 640 170 590 200 Q 540 180 500 200 Q 480 160 450 140 Z" fill="#1e293b" opacity="0.8" />
+  <!-- Indonesia & Southeast Asia (Highlighted in bright marine tone) -->
+  <path d="M 520 220 Q 540 210 560 225 Q 550 240 530 245 Z" fill="#0284c7" />
+  <circle cx="550" cy="245" r="7" fill="#0284c7" />
+  <circle cx="570" cy="250" r="5" fill="#0284c7" />
+  <circle cx="595" cy="252" r="8" fill="#0284c7" />
+  <circle cx="620" cy="260" r="6" fill="#0284c7" />
+  <!-- Australia -->
+  <path d="M 600 300 Q 670 290 680 340 Q 640 380 590 350 Z" fill="#1e293b" opacity="0.8" />
+
+  <!-- Shipping Routes Lines (Glowing dashed arcs) -->
+  <!-- Jakarta / Indonesia (cx: 560, cy: 245) to Singapore/Malacca Strait -->
+  <!-- Route 1: Indonesia to East Asia (China, Japan, Korea) -->
+  <path d="M 560 245 Q 600 180 640 130" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="6,4" />
+  <circle cx="640" cy="130" r="4" fill="#38bdf8" />
+  
+  <!-- Route 2: Indonesia to Middle East / Persian Gulf -->
+  <path d="M 560 245 Q 490 220 440 180" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="6,4" />
+  <circle cx="440" cy="180" r="4" fill="#f59e0b" />
+
+  <!-- Route 3: Indonesia through Suez to Europe / Rotterdam -->
+  <path d="M 440 180 Q 410 160 380 110" fill="none" stroke="#34d399" stroke-width="2" stroke-dasharray="6,4" />
+  <circle cx="380" cy="110" r="4" fill="#34d399" />
+
+  <!-- Route 4: Indonesia to Australia / Oceania -->
+  <path d="M 560 245 Q 600 280 630 330" fill="none" stroke="#f43f5e" stroke-width="2" stroke-dasharray="6,4" />
+  <circle cx="630" cy="330" r="4" fill="#f43f5e" />
+
+  <!-- Route 5: Indonesia to Americas via Pacific -->
+  <path d="M 640 130 Q 720 120 780 140" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,4" />
+  <path d="M 20 150 Q 80 160 130 180" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,4" />
+
+  <!-- Indonesian Hub Pulse Point -->
+  <circle cx="560" cy="245" r="14" fill="#38bdf8" opacity="0.3">
+    <animate attributeName="r" values="8;18;8" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.6;0.1;0.6" dur="3s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="560" cy="245" r="5" fill="#f59e0b" />
+</svg>

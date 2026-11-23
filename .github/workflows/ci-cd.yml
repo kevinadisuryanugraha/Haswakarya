@@ -1,0 +1,257 @@
+name: Haswakarya CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    # Verifikasi arsip backup produksi setiap hari 02:15 UTC (09:15 WIB).
+    - cron: '15 2 * * *'
+  workflow_dispatch:
+    inputs:
+      run_backup:
+        description: 'Jalankan backup baru sebelum verifikasi'
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Kredensial CI bersifat sementara: hanya dipakai untuk prisma validate,
+  # migrate deploy ke service postgres, dan build Next.js. Tidak ada data nyata.
+  DATABASE_URL: postgresql://haswakarya:haswakarya@localhost:5432/haswakarya_ci?schema=public
+  JWT_SECRET: ci-only-secret-with-at-least-32-characters-long
+  NODE_ENV: test
+
+jobs:
+  verify:
+    name: Verify (schema, types, tests, build)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: haswakarya
+          POSTGRES_PASSWORD: haswakarya
+          POSTGRES_DB: haswakarya_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U haswakarya -d haswakarya_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Validate Prisma Schema
+        run: npx prisma validate
+
+      - name: Apply Migrations to Ephemeral Database
+        run: npx prisma migrate deploy
+
+      - name: Create Shadow Database
+        run: |
+          PGPASSWORD=haswakarya psql -h localhost -U haswakarya -d haswakarya_ci             -c "CREATE DATABASE haswakarya_shadow;" || true
+
+      - name: Verify Migrations Match Schema (no drift)
+        run: npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --shadow-database-url "postgresql://haswakarya:haswakarya@localhost:5432/haswakarya_shadow?schema=public" --exit-code
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Shell Script Syntax
+        run: |
+          # `sh -n` hanya memeriksa berkas pertama, jadi ulangi per berkas.
+          for script in scripts/*.sh; do
+            sh -n "$script" || exit 1
+            echo "ok: $script"
+          done
+
+      - name: TypeScript Type Check
+        run: npx tsc --noEmit
+
+      - name: Unit Tests
+        run: npx vitest run --reporter=verbose
+
+      - name: Production Build
+        run: npx next build
+
+  backup-roundtrip:
+    name: Backup & Restore Roundtrip
+    runs-on: ubuntu-latest
+
+    # Bukti R8 dijalankan pada setiap perubahan: dump, restore ke database
+    # kedua, verifikasi manifest, lalu bandingkan jumlah baris per tabel.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: haswakarya
+          POSTGRES_PASSWORD: haswakarya
+          POSTGRES_DB: haswakarya_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U haswakarya -d haswakarya_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://haswakarya:haswakarya@localhost:5432/haswakarya_ci?schema=public
+      JWT_SECRET: ci-only-secret-with-at-least-32-characters-long
+      BACKUP_DIR: ${{ github.workspace }}/.ci-backups
+      SKIP_VAULT: '1'
+      PGPASSWORD: haswakarya
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install PostgreSQL Client
+        run: |
+          if ! command -v pg_dump >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y postgresql-client-16
+          fi
+          pg_dump --version
+          psql --version
+
+      - name: Prepare Ephemeral Database
+        run: |
+          npx prisma migrate deploy
+          npx prisma generate
+          npx prisma db seed
+          mkdir -p "$BACKUP_DIR"
+
+      - name: Take Backup
+        run: npm run backup
+
+      - name: Verify Manifest
+        run: npm run backup:verify -- --dir "$BACKUP_DIR" --max-age-days 1 --json
+
+      - name: Restore Into Second Database
+        run: |
+          psql -X -h localhost -U haswakarya -d haswakarya_ci -c "DROP DATABASE IF EXISTS haswakarya_restore;" \
+            || true
+          psql -X -h localhost -U haswakarya -d haswakarya_ci -c "CREATE DATABASE haswakarya_restore;"
+          ARCHIVE="$(find "$BACKUP_DIR" -maxdepth 1 -name 'hcos-*.dump' | sort | tail -n 1)"
+          echo "archive=$ARCHIVE"
+          npm run restore -- --archive "$ARCHIVE" --target-db haswakarya_restore --yes
+
+      - name: Compare Row Counts
+        run: |
+          TABLES="$(psql -X -t -A -h localhost -U haswakarya -d haswakarya_ci \
+            -c "select tablename from pg_tables where schemaname='public' order by tablename")"
+          [ -n "$TABLES" ] || { echo 'Tidak ada tabel, backfill tidak teruji.'; exit 1; }
+          status=0
+          for table in $TABLES; do
+            source_count="$(psql -X -t -A -h localhost -U haswakarya -d haswakarya_ci \
+              -c "select count(*) from \"$table\"")"
+            restored_count="$(psql -X -t -A -h localhost -U haswakarya -d haswakarya_restore \
+              -c "select count(*) from \"$table\"")"
+            if [ "$source_count" != "$restored_count" ]; then
+              echo "MISMATCH $table: sumber=$source_count hasil_restore=$restored_count"
+              status=1
+            else
+              echo "ok $table: $source_count"
+            fi
+          done
+          exit $status
+
+  backup-verify-production:
+    name: Verify Production Backup Archive
+    # Hanya pada jadwal/manual: butuh runner self-hosted yang punya akses
+    # volume backup produksi.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: [self-hosted, haswakarya-vps]
+    environment: production
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Take Fresh Backup
+        if: github.event_name == 'workflow_dispatch' && inputs.run_backup
+        run: |
+          cd /www/wwwroot/haswakarya.com || cd /var/www/haswakarya
+          docker compose --profile ops run --rm backup sh /app/scripts/backup.sh
+
+      - name: Verify Newest Manifest
+        run: |
+          cd /www/wwwroot/haswakarya.com || cd /var/www/haswakarya
+          docker compose --profile ops run --rm backup sh /app/scripts/backup.sh --verify
+          docker compose --profile ops run --rm backup \
+            sh -c 'cd /app && npx tsx src/server/backupVerify.ts --dir /backups --max-age-days 2'
+
+  deploy-production:
+    name: Deploy to Production VPS
+    needs: [verify]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: [self-hosted, haswakarya-vps]
+    environment: production
+    steps:
+      - name: Pull Latest Code
+        run: |
+          cd /www/wwwroot/haswakarya.com || cd /var/www/haswakarya
+          git pull origin main
+
+      - name: Apply Production Migrations
+        run: |
+          cd /www/wwwroot/haswakarya.com || cd /var/www/haswakarya
+          docker compose --profile migrate build migrate
+          docker compose --profile migrate run --rm migrate
+
+      - name: Deploy Docker Compose Containers
+        run: |
+          cd /www/wwwroot/haswakarya.com || cd /var/www/haswakarya
+          docker compose up -d --build
+          docker image prune -f
+
+      - name: Post-Deployment Health Check
+        run: |
+          # Menembak /api/health, bukan halaman depan: halaman depan tetap 200
+          # walau database mati, sehingga gerbang deploy akan lolos diam-diam.
+          for attempt in 1 2 3 4 5 6; do
+            if curl -fsS http://127.0.0.1:3000/api/health >/dev/null; then
+              echo "Haswakarya Crewing OS deployed and healthy."
+              curl -sS http://127.0.0.1:3000/api/health
+              echo
+              exit 0
+            fi
+            echo "Attempt ${attempt}: app belum siap, tunggu 10 detik..."
+            sleep 10
+          done
+          echo "Health check gagal: aplikasi tidak merespons."
+          curl -sS http://127.0.0.1:3000/api/health || true
+          docker compose logs --tail=100 web || true
+          docker compose logs --tail=50 worker || true
+          exit 1

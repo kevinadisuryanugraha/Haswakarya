@@ -1,0 +1,779 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* SOE / Maritime Design Tokens */
+  --primary: #407997;
+  --primary-dark: #002057;
+  --navy: #06122A;
+  --ice: #DCEDF3;
+  --sky: #BEDDEE;
+  --accent: #E4572E;
+  --surface: #F8F9FA;
+  --border-light: #EBEDF2;
+  --muted: #616161;
+
+  /* SOE Surface & Component Tokens */
+  --surface-card: #DCEDF3;
+  --surface-card-alt: #90C5E1;
+  --surface-dark: #06122A;
+
+  /* Highlight Progress Autoplay Duration (10s) */
+  --highlight-duration: 10000ms;
+
+  /* Typography Scale */
+  --text-h1: 56px;
+  --text-h2: 48px;
+  --text-h3: 40px;
+  --text-h4: 31px;
+  --text-h5: 24px;
+  --text-h6: 20px;
+  --text-body: 18px;
+  --text-sm: 16px;
+  --line-h-body: 1.6;
+  --line-h-headings: 1.2;
+}
+
+/* Base Styles & Resets */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Roboto', 'Plus Jakarta Sans', sans-serif;
+  background-color: #ffffff;
+  color: #06122A;
+  line-height: var(--line-h-body);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans-serif;
+  line-height: var(--line-h-headings);
+  font-weight: 700;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #407997;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #002057;
+}
+
+/* Hide scrollbar for horizontal mobile pill steppers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ------------------------------------------------------------- */
+/* SOE Bricks Design Kit Micro-Interactions & Geometry Utilities */
+/* ------------------------------------------------------------- */
+
+/* 1. Angled Navigation Bar */
+.angled-nav {
+  background: #407997;
+  padding: 20px 40px;
+  color: #ffffff;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+}
+
+/* SOE Institutional Tag Badge Definition (Clean Corporate Rectangular with Subtle Radius) */
+.soe-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.375rem;
+  background-color: #DCEDF3;
+  color: #002057;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  border: 1px solid rgba(64, 121, 151, 0.3);
+  box-shadow: 0 1px 2px rgba(6, 18, 42, 0.04);
+}
+
+.soe-tag-dark {
+  background-color: rgba(220, 237, 243, 0.12);
+  color: #DCEDF3;
+  border: 1px solid rgba(220, 237, 243, 0.25);
+  border-radius: 0.375rem;
+}
+
+/* ------------------------------------------------------------- */
+/* Anti-AI Slop Design System Tokens & Surface Texture Kit       */
+/* (Inspired by Grainient, HorizonX, Arc UI, Bklit, Pixel UI)    */
+/* ------------------------------------------------------------- */
+
+/* 1. Grainient: Organic Analog Grain Filter (Eliminates Flat AI Plasticity) */
+.bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* 2. Technical Subtle Grid Matrix (Clean Minimal Pattern) */
+.bg-dot-grid {
+  /* Removed AI Slop dot pattern - pristine clean surface */
+  background-image: none;
+}
+
+.bg-dot-grid-dark {
+  /* Removed AI Slop dark dot pattern - pristine corporate navy */
+  background-image: none;
+}
+
+.bg-grid-lines {
+  background-image: linear-gradient(to right, rgba(64, 121, 151, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(64, 121, 151, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* 3. Oceanic Corporate Highlights (Clean subtle micro-shadow, no murky radial blobs) */
+.bklit-glow-cyan {
+  position: relative;
+}
+.bklit-glow-cyan::before {
+  content: none;
+}
+
+.bklit-glow-coral {
+  position: relative;
+}
+.bklit-glow-coral::before {
+  content: none;
+}
+
+/* 4. HorizonX & Arc UI: Micro-Borders, Shimmer & Glass Cards */
+.horizonx-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(6, 18, 42, 0.08);
+  box-shadow: 0 2px 6px rgba(6, 18, 42, 0.03), 0 12px 28px -6px rgba(6, 18, 42, 0.07);
+  /* `transition: all` memaksa browser mengawasi semua properti (termasuk
+     layout); cukup properti yang benar-benar berubah saat hover. */
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.horizonx-card:hover {
+  border-color: rgba(64, 121, 151, 0.4);
+  box-shadow: 0 4px 16px rgba(6, 18, 42, 0.06), 0 20px 40px -8px rgba(64, 121, 151, 0.16);
+  transform: translateY(-4px);
+}
+
+.horizonx-card-dark {
+  position: relative;
+  background: #06122A;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 25px -5px rgba(6, 18, 42, 0.3);
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.horizonx-card-dark:hover {
+  border-color: rgba(64, 121, 151, 0.5);
+  box-shadow: 0 16px 36px -8px rgba(6, 18, 42, 0.4);
+  transform: translateY(-2px);
+}
+
+/* 5. 21st.dev: Shimmering Button & Spotlight Hover */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  /* Animasi kilau hanya hidup saat tombol disentuh/di-hover. Sebelumnya
+     berjalan `4s infinite` di tujuh tombol sekaligus, memaksa compositor
+     terus bekerja walau halaman diam. */
+  pointer-events: none;
+  will-change: transform;
+}
+
+.shimmer-btn:hover::after,
+.shimmer-btn:focus-visible::after {
+  animation: shimmer 1.1s ease-in-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-btn::after {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .angled-nav {
+    clip-path: none;
+    padding: 16px 20px;
+  }
+}
+
+.clip-angled-nav {
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+}
+
+/* 2. Split Diagonal CTA Banner */
+.cta-split {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.cta-left__shape {
+  clip-path: polygon(0 0, 95% 0, 100% 100%, 0 100%);
+}
+
+.clip-cta-shape {
+  clip-path: polygon(0 0, 95% 0, 100% 100%, 0 100%);
+}
+
+@media (max-width: 768px) {
+  .cta-split {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .cta-left__shape {
+    clip-path: none;
+    padding: 36px 24px !important;
+  }
+
+  .cta-split > div:last-child {
+    margin-left: 0;
+    height: 260px;
+  }
+
+  .cta-split img {
+    height: 260px;
+  }
+}
+
+/* 3. Card Lift Hover Micro-Interaction */
+.card-lift {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px -10px rgba(6, 18, 42, 0.14);
+}
+
+/* 4. Diagonal Corner Arrow */
+.corner-arrow {
+  transform: rotateZ(-45deg);
+  transition: transform 0.3s ease;
+}
+
+.card-lift:hover .corner-arrow,
+.group:hover .corner-arrow {
+  transform: rotateZ(0deg);
+}
+
+/* 5. Hero Highlight Slider & Animated Progress Bar */
+.highlights-slider {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(260px, 624px);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.highlights-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.highlight-item {
+  position: relative;
+  padding: 0 0 12px 0;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.highlight-item:hover {
+  opacity: 0.85;
+}
+
+.highlight-item.active {
+  opacity: 1;
+}
+
+.highlight-title {
+  margin: 0;
+  transition: color 0.35s ease, transform 0.35s ease, opacity 0.35s ease;
+}
+
+.highlight-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(8px);
+  margin-top: 0;
+  transition: max-height 0.45s ease, opacity 0.35s ease, transform 0.35s ease, margin-top 0.35s ease;
+}
+
+.highlight-item.active .highlight-content {
+  max-height: 160px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 8px;
+}
+
+.highlight-progress {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.highlight-progress .line {
+  display: none !important;
+}
+
+.highlight-progress::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.highlight-item.active .highlight-progress::before,
+.highlight-progress.is-active::before {
+  animation: highlightProgress var(--highlight-duration, 10000ms) linear forwards;
+}
+
+.slider-paused .highlight-progress::before,
+.highlights-slider:hover .highlight-progress::before {
+  animation-play-state: paused;
+}
+
+@keyframes highlightProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.highlight-progress-bar {
+  animation: highlightProgress linear forwards;
+}
+
+.highlights-right {
+  position: relative;
+  min-height: 468px;
+  overflow: hidden;
+}
+
+/* Highlights Slider Responsive Grid */
+@media (max-width: 1023px) {
+  .highlights-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .highlights-right {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .highlights-right {
+    min-height: 260px;
+  }
+}
+
+/* 6. Infinite Regulatory & Partner Logo Marquee */
+.logo-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo-marquee::before,
+.logo-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.logo-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.logo-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.logo-marquee .logo-row {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  width: max-content;
+  animation: logo-marquee-scroll 25s linear infinite;
+  will-change: transform;
+}
+
+.logo-marquee:hover .logo-row {
+  animation-play-state: paused;
+}
+
+.logo-marquee .logo-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-marquee .logo-item img {
+  display: block;
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.75;
+  filter: grayscale(100%);
+  transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+}
+
+.logo-marquee .logo-item img:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+  transform: translateY(-2px);
+}
+
+@keyframes logo-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.logo-marquee.marquee-reverse .logo-row {
+  animation-direction: reverse;
+}
+
+.logo-marquee.marquee-slow .logo-row {
+  animation-duration: 40s;
+}
+
+.logo-marquee.marquee-fast .logo-row {
+  animation-duration: 15s;
+}
+
+@media (max-width: 768px) {
+  .logo-marquee::before,
+  .logo-marquee::after {
+    width: 40px;
+  }
+
+  .logo-marquee .logo-row {
+    gap: 36px;
+    animation-duration: 18s;
+  }
+
+  .logo-marquee .logo-item img {
+    height: 28px;
+    max-width: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee .logo-row {
+    animation: none;
+  }
+}
+
+/* 7. Stats Overlap Module (-83px Negative Margin) */
+.stat-module-overlap {
+  margin-top: -83px;
+}
+
+@media (max-width: 767px) {
+  .stat-module-overlap {
+    margin-top: 0;
+  }
+}
+
+/* 8. Text Wrap & Hover Reveal Interactions */
+.card-hovers {
+  position: relative;
+  overflow: hidden;
+}
+
+.text-wrap {
+  transition: transform 0.4s ease;
+}
+
+.hover-text {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(10px);
+  transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease, margin-top 0.4s ease;
+  margin-top: 0;
+}
+
+.card-hovers:hover .text-wrap {
+  transform: translateY(-4px);
+}
+
+.card-hovers:hover .hover-text {
+  max-height: 200px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 8px;
+}
+
+@media (max-width: 1024px) {
+  .hover-text {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+    margin-top: 8px;
+    overflow: visible;
+  }
+  .card-hovers .text-wrap {
+    transform: none;
+  }
+}
+
+/* 9. Stylized Check Lists & Numbered Steppers */
+.check-list ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.check-list li {
+  position: relative;
+  padding-left: 38px;
+  margin-bottom: 12px;
+}
+
+.check-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #DCEDF3;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 6L9 17L4 12' stroke='%23407997' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 14px;
+}
+
+/* ------------------------------------------------------------- */
+/* 10. Portal Responsive Layer (H-COS API)                        */
+/*    Tabel padat diubah menjadi kartu bertumpuk di bawah `md`     */
+/*    agar tidak ada kolom berdempetan atau teks terpotong.        */
+/* ------------------------------------------------------------- */
+
+/* Cegah anak flex/grid memaksa lebar induk (akar overflow horizontal). */
+.portal-scope {
+  min-width: 0;
+}
+
+.mobile-cards {
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  .mobile-cards {
+    display: block;
+    width: 100%;
+  }
+
+  .mobile-cards thead,
+  .mobile-cards tfoot {
+    display: none;
+  }
+
+  .mobile-cards tbody,
+  .mobile-cards tr,
+  .mobile-cards td {
+    display: block;
+    width: 100%;
+  }
+
+  .mobile-cards tbody {
+    padding: 0.75rem;
+  }
+
+  .mobile-cards tr {
+    border: 1px solid var(--border-light);
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+    padding: 0.35rem 0.25rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 1px 2px rgba(6, 18, 42, 0.04);
+  }
+
+  .mobile-cards tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .mobile-cards td {
+    display: grid;
+    grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+    align-items: start;
+    gap: 0.5rem 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 0;
+    text-align: left;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-cards td::before {
+    content: attr(data-label);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .mobile-cards td[data-label=""]::before,
+  .mobile-cards td.mc-flat::before {
+    display: none;
+  }
+
+  .mobile-cards td.mc-flat,
+  .mobile-cards td.mc-block {
+    display: block;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .mobile-cards td.mc-actions {
+    display: block;
+    padding-top: 0.35rem;
+    border-top: 1px dashed var(--border-light);
+    margin-top: 0.25rem;
+  }
+
+  .mobile-cards td.mc-actions::before {
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .mobile-cards .mc-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .mobile-cards .mc-action-row > * {
+    flex: 0 1 auto;
+  }
+
+  .mobile-cards .mc-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Kartu ringkasan: hindari label panjang menabrak angka */
+.portal-kpi {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Tap target & scroll-snap untuk lane kanban di ponsel */
+.portal-lane-snap {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.portal-lane-snap > * {
+  scroll-snap-align: start;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   11. Performa Render — Seksi Jauh di Bawah Lipatan
+   Browser melewati layout/paint seksi ini sampai mendekati viewport, sehingga
+   biaya render awal beranda turun tanpa mengubah tampilan. `contain-intrinsic-
+   size` mencegah lompatan scroll saat tinggi asli diketahui.
+   ═══════════════════════════════════════════════════════════════════════════ */
+#qualifications,
+#why-us,
+#legals,
+#faq {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* Hormati preferensi pengguna yang menolak animasi */
+@media (prefers-reduced-motion: reduce) {
+  .horizonx-card,
+  .horizonx-card-dark {
+    transition: none;
+  }
+}

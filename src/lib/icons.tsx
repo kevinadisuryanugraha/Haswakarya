@@ -1,0 +1,82 @@
+import React from 'react';
+import {
+  CheckCircle2,
+  ArrowRight,
+  Shield,
+  Clock,
+  Anchor,
+  Building2,
+  Users,
+  FileCheck,
+  FileCheck2,
+  Headphones,
+  GraduationCap,
+  Search,
+  Award,
+  UserCheck,
+  Video,
+  Stethoscope,
+  Stamp,
+  FileText,
+  Briefcase,
+  Compass,
+  Ship,
+  Sparkles,
+  ShieldAlert,
+  BookOpenCheck,
+  Users2,
+  HeartHandshake,
+  MessageSquare,
+  TrendingUp,
+  Star,
+  Globe,
+  ShieldCheck,
+  Zap,
+  Handshake,
+  type LucideIcon,
+} from 'lucide-react';
+
+export const ICON_MAP: Record<string, LucideIcon> = {
+  CheckCircle2,
+  ArrowRight,
+  Shield,
+  Clock,
+  Anchor,
+  Building2,
+  Users,
+  FileCheck,
+  FileCheck2,
+  Headphones,
+  GraduationCap,
+  Search,
+  Award,
+  UserCheck,
+  Video,
+  Stethoscope,
+  Stamp,
+  FileText,
+  Briefcase,
+  Compass,
+  Ship,
+  Sparkles,
+  ShieldAlert,
+  BookOpenCheck,
+  Users2,
+  HeartHandshake,
+  MessageSquare,
+  TrendingUp,
+  Star,
+  Globe,
+  ShieldCheck,
+  Zap,
+  Handshake,
+};
+
+/**
+ * Returns a standardized Lucide icon component with given class names.
+ * Falls back to CheckCircle2 if not found.
+ */
+export function getMaritimeIcon(name: string, className = 'w-6 h-6'): React.ReactNode {
+  const IconComponent = ICON_MAP[name] ?? CheckCircle2;
+  return <IconComponent className={className} />;
+}

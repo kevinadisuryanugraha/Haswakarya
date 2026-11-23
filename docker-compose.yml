@@ -1,0 +1,177 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Haswakarya Crewing Operating System (H-COS) — Docker Compose
+# Orkestrasi Produksi: Next.js 15 App + PostgreSQL 16 + Redis 7 + Vault Storage
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: haswakarya-ecosystem
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  # ─── Storage Volume Permission Guard ───────────────────────────────────────
+  storage:
+    image: alpine:3.20
+    restart: unless-stopped
+    command: ["sh", "-c", "mkdir -p /storage/vault && chown -R 1001:1001 /storage && chmod -R u+rwX,g+rwX,o-rwx /storage && exec sleep infinity"]
+    volumes:
+      - ${VAULT_VOLUME:-haswakarya_vault}:/storage
+    healthcheck:
+      test: ["CMD-SHELL", "test -d /storage/vault && test -w /storage/vault"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging: *default-logging
+
+  # ─── Database PostgreSQL 16 ────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-haswakarya_db}
+      POSTGRES_USER: ${POSTGRES_USER:-haswakarya_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}
+    volumes:
+      - ${DB_VOLUME:-haswakarya_pgdata}:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT_BINDING:-127.0.0.1:5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-haswakarya_admin} -d ${POSTGRES_DB:-haswakarya_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+
+  # ─── Redis 7 (BullMQ Job Queue & Session Cache) ───────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-RedisSecurePass123!}"]
+    volumes:
+      - ${REDIS_VOLUME:-haswakarya_redisdata}:/data
+    ports:
+      - "${REDIS_PORT_BINDING:-127.0.0.1:6379}:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD:-RedisSecurePass123!} ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+
+  # ─── Migrasi Database (profil "migrate", tidak jalan otomatis) ─────────────
+  migrate:
+    profiles: ["migrate"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: .
+      target: builder
+    image: haswakarya-migrate:latest
+    command: ["npx", "prisma", "migrate", "deploy"]
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-haswakarya_admin}:${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}@postgres:5432/${POSTGRES_DB:-haswakarya_db}?schema=public"
+    logging: *default-logging
+
+  # ─── Backup Terjadwal (profil `ops`, pakai pg_dump versi server) ──────────
+  backup:
+    profiles: ["ops"]
+    image: postgres:16-alpine
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: ["/bin/sh", "/scripts/backup.sh"]
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGUSER: ${POSTGRES_USER:-haswakarya_admin}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}
+      PGDATABASE: ${POSTGRES_DB:-haswakarya_db}
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-haswakarya_admin}:${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}@postgres:5432/${POSTGRES_DB:-haswakarya_db}?schema=public"
+      BACKUP_DIR: /backups
+      VAULT_DIR: /vault
+      RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+    volumes:
+      - ./scripts:/scripts:ro
+      - haswakarya_backups:/backups
+      - ${VAULT_VOLUME:-haswakarya_vault}:/vault:ro
+    logging: *default-logging
+
+  # ─── Worker Evaluasi Matriks (BullMQ consumer, tanpa port publik) ──────────
+  worker:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    build:
+      context: .
+      target: worker
+    image: haswakarya-worker:latest
+    restart: unless-stopped
+    stop_grace_period: 30s
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-haswakarya_admin}:${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}@postgres:5432/${POSTGRES_DB:-haswakarya_db}?schema=public"
+      REDIS_URL: "redis://:${REDIS_PASSWORD:-RedisSecurePass123!}@redis:6379"
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      APP_VERSION: ${APP_VERSION:-production}
+      GIT_SHA: ${GIT_SHA:-unknown}
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'src/server/worker.ts' >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging: *default-logging
+
+  # ─── Web Application (Next.js 15 App Router) ──────────────────────────────
+  web:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+    build:
+      context: .
+      target: runner
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://haswakarya.com}
+    image: haswakarya-web:latest
+    restart: unless-stopped
+    ports:
+      - "${PORT_BINDING:-127.0.0.1:3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-haswakarya_admin}:${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}@postgres:5432/${POSTGRES_DB:-haswakarya_db}?schema=public"
+      REDIS_URL: "redis://:${REDIS_PASSWORD:-RedisSecurePass123!}@redis:6379"
+      VAULT_STORAGE_PATH: "/app/storage/vault"
+      NODE_OPTIONS: "--max-old-space-size=1024"
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      APP_VERSION: ${APP_VERSION:-production}
+      GIT_SHA: ${GIT_SHA:-unknown}
+      # Token scrape Prometheus untuk /api/metrics; kosong = rute 404 di produksi.
+      METRICS_TOKEN: ${METRICS_TOKEN:-}
+    volumes:
+      - ${VAULT_VOLUME:-haswakarya_vault}:/app/storage/vault
+    healthcheck:
+      # Menembak endpoint health agar container dinyatakan sehat hanya jika DB hidup.
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging: *default-logging
+
+volumes:
+  haswakarya_pgdata:
+  haswakarya_redisdata:
+  haswakarya_vault:
+  haswakarya_backups:

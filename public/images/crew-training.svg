@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="trainBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1b3d" />
+      <stop offset="100%" stop-color="#1e3a5f" />
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="400" rx="12" fill="url(#trainBg)" />
+
+  <!-- Grid overlay -->
+  <path d="M 0 100 L 600 100 M 0 200 L 600 200 M 0 300 L 600 300" stroke="#ffffff" stroke-width="0.5" opacity="0.1" />
+  <path d="M 150 0 L 150 400 M 300 0 L 300 400 M 450 0 L 450 400" stroke="#ffffff" stroke-width="0.5" opacity="0.1" />
+
+  <!-- Central Badge / Compass / Helm icon -->
+  <circle cx="300" cy="180" r="90" fill="#102a45" stroke="#38bdf8" stroke-width="3" />
+  <circle cx="300" cy="180" r="75" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3" />
+
+  <!-- Helm wheel handles -->
+  <line x1="300" y1="70" x2="300" y2="290" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round" />
+  <line x1="190" y1="180" x2="410" y2="180" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round" />
+  <line x1="222" y1="102" x2="378" y2="258" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round" />
+  <line x1="222" y1="258" x2="378" y2="102" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round" />
+  <circle cx="300" cy="180" r="35" fill="#0b1b3d" stroke="#f59e0b" stroke-width="4" />
+  <circle cx="300" cy="180" r="14" fill="#38bdf8" />
+
+  <!-- Officer Silhouette Left -->
+  <g transform="translate(100, 210)">
+    <circle cx="50" cy="40" r="24" fill="#f8fafc" />
+    <!-- Cap visor -->
+    <path d="M 30 35 L 75 35 L 70 24 L 35 24 Z" fill="#0b1b3d" />
+    <path d="M 45 35 L 82 40 L 72 35 Z" fill="#f59e0b" />
+    <!-- Torso -->
+    <path d="M 15 120 C 15 80 40 70 50 70 C 60 70 85 80 85 120 Z" fill="#f8fafc" />
+    <!-- Epaulets gold rank bars -->
+    <rect x="18" y="76" width="16" height="5" rx="1" fill="#f59e0b" />
+    <rect x="66" y="76" width="16" height="5" rx="1" fill="#f59e0b" />
+  </g>
+
+  <!-- Engineer Silhouette Right -->
+  <g transform="translate(400, 210)">
+    <circle cx="50" cy="40" r="24" fill="#f8fafc" />
+    <!-- Safety Hardhat -->
+    <path d="M 28 35 C 28 18 40 14 50 14 C 60 14 72 18 72 35 Z" fill="#f59e0b" />
+    <path d="M 24 35 L 76 35 L 74 38 L 26 38 Z" fill="#d97706" />
+    <!-- Torso (Coveralls) -->
+    <path d="M 15 120 C 15 80 40 70 50 70 C 60 70 85 80 85 120 Z" fill="#0284c7" />
+    <!-- High-vis reflective stripes -->
+    <line x1="28" y1="88" x2="72" y2="88" stroke="#fef08a" stroke-width="4" />
+  </g>
+
+  <!-- Center Helm Compass Glow -->
+  <circle cx="300" cy="180" r="110" fill="#38bdf8" opacity="0.05" />
+</svg>

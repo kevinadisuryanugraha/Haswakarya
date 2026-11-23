@@ -1,0 +1,477 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// Haswakarya Crewing Operating System (H-COS) — Prisma Schema (PostgreSQL 16)
+// STCW 2010 Manila Amendments • MLC 2006 • OCIMF SIRE 2.0 • Hubla e-PKL
+// ═══════════════════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── 1. Role-Based Access Control (RBAC) ───────────────────────────────────
+enum UserRole {
+  SUPERADMIN
+  CREWING_MANAGER
+  CREWING_OFFICER
+  SHIPOWNER_CLIENT
+  CANDIDATE_SEAFARER
+}
+
+model User {
+  id               String       @id @default(uuid())
+  email            String       @unique
+  passwordHash     String
+  fullName         String
+  role             UserRole     @default(CANDIDATE_SEAFARER)
+  phone            String?
+  isActive         Boolean      @default(true)
+  lastLoginAt      DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  seafarerProfile  SeafarerProfile?
+  assignedAts      AtsHistory[]
+  auditTrails      AuditTrail[]
+
+  @@index([role])
+}
+
+// ─── 2. Armada Kapal (Vessel Registry) ─────────────────────────────────────
+enum VesselType {
+  OIL_CHEMICAL_TANKER
+  PRODUCT_TANKER
+  BULK_CARRIER
+  CONTAINER_FEEDER
+  HARBOR_OCEAN_TUG
+  ASPHALT_BITUMEN_TANKER
+  GENERAL_CARGO
+  OFFSHORE_CREW_BOAT
+}
+
+model Vessel {
+  id               String       @id @default(uuid())
+  name             String
+  imoNumber        String       @unique
+  callSign         String?
+  flag             String       @default("ID") // Bendera kapal (ID, PA, SG, etc.)
+  vesselType       VesselType
+  dwt              Float        // Deadweight Tonnage
+  grt              Float        // Gross Register Tonnage
+  engineBhp        Float        // Brake Horsepower
+  engineType       String?      // e.g. "MAN B&W 6S50MC-C", "Daihatsu 6DKM-26"
+  tradingArea      String       @default("Near Coastal Voyages (NCV)") // Ocean Going / NCV / Domestic
+  ownerName        String
+  safeManningTotal Int          @default(14)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  requisitions     CrewRequisition[]
+  contracts        EmploymentContractPKL[]
+
+  @@index([imoNumber])
+  @@index([vesselType])
+}
+
+// ─── 3. Permintaan Awak Kapal (Safe Manning Requisition) ───────────────────
+enum RequisitionStatus {
+  OPEN
+  INTERVIEWING
+  VETTING_COMPLETED
+  FULFILLED
+  CANCELLED
+}
+
+enum MaritimeRank {
+  MASTER
+  CHIEF_OFFICER
+  SECOND_OFFICER
+  THIRD_OFFICER
+  DECK_CADET
+  BOSUN
+  ABLE_SEAMAN
+  ORDINARY_SEAMAN
+  CHIEF_ENGINEER
+  SECOND_ENGINEER
+  THIRD_ENGINEER
+  FOURTH_ENGINEER
+  ENGINE_CADET
+  FITTER
+  OILER
+  WIPER
+  CHIEF_COOK
+  MESSMAN
+}
+
+model CrewRequisition {
+  id               String            @id @default(uuid())
+  requisitionNo    String            @unique // e.g. "REQ-2026-TNK-001"
+  vesselId         String
+  rank             MaritimeRank
+  requiredQuantity Int               @default(1)
+  minSeaTimeMonths Int               @default(12)
+  minBhpDwtExp     Float?            // Minimal exp di BHP atau DWT setara
+  targetJoinDate   DateTime
+  targetPort       String            // e.g. "Pelabuhan Tanjung Priok, Jakarta"
+  salaryBudgetUsd  Float?
+  salaryBudgetIdr  Float?
+  status           RequisitionStatus @default(OPEN)
+  notes            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  vessel           Vessel            @relation(fields: [vesselId], references: [id], onDelete: Cascade)
+  applications     CrewApplication[]
+
+  @@index([vesselId])
+  @@index([rank])
+  @@index([status])
+}
+
+// ─── 4. Profil Awak Kapal (Seafarer Dossier) ───────────────────────────────
+enum SeafarerStatus {
+  ONBOARD
+  SIGN_OFF
+  LEAVE_ROTATION
+  STANDBY_POOL
+  TRAINING
+  INACTIVE
+}
+
+// Status PTKP untuk pemotongan PPh 21 (PP 58/2023 & PMK 168/2023).
+// TK = tidak kawin, K = kawin; angka = jumlah tanggungan (maks 3).
+enum PtkpStatus {
+  TK0
+  TK1
+  TK2
+  TK3
+  K0
+  K1
+  K2
+  K3
+}
+
+model SeafarerProfile {
+  id               String          @id @default(uuid())
+  userId           String          @unique
+  seamanBookNo     String          @unique // Nomor Buku Pelaut Resmi Hubla
+  passportNo       String?
+  sidNumber        String?         // Seafarers Identity Document (ILO 185)
+  npwp             String?         // 16 digit tanpa pemisah, untuk bukti potong PPh 21
+  ptkpStatus       PtkpStatus      @default(TK0)
+  primaryRank      MaritimeRank
+  dateOfBirth      DateTime
+  placeOfBirth     String
+  bloodType        String?
+  homeAddress      String
+  emergencyContact String
+  emergencyPhone   String
+  currentStatus    SeafarerStatus  @default(STANDBY_POOL)
+  totalSeaTimeDays Int             @default(0)
+  marlinsScore     Float?          // Marlins English Test Score (%)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seaTimes         SeaTimeRecord[]
+  certificates     CertificateSTCW[]
+  medicals         MedicalRecord[]
+  applications     CrewApplication[]
+  contracts        EmploymentContractPKL[]
+  payrolls         PayrollRecord[]
+
+  @@index([seamanBookNo])
+  @@index([primaryRank])
+  @@index([currentStatus])
+}
+
+// ─── 5. Riwayat Layar Resmi (Sea-Time Records) ─────────────────────────────
+model SeaTimeRecord {
+  id               String          @id @default(uuid())
+  seafarerId       String
+  vesselName       String
+  imoNumber        String?
+  vesselType       VesselType
+  rankServed       MaritimeRank
+  grt              Float?
+  dwt              Float?
+  bhp              Float?
+  engineModel      String?
+  signOnDate       DateTime
+  signOffDate      DateTime
+  totalDays        Int
+  dischargePort    String?
+  signOnPort       String?
+  operatingCompany String?
+  isVerifiedHubla  Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+
+  seafarer         SeafarerProfile @relation(fields: [seafarerId], references: [id], onDelete: Cascade)
+
+  @@index([seafarerId])
+  @@index([vesselType])
+  @@index([rankServed])
+}
+
+// ─── 6. Sertifikat STCW & Dokumen Sah (Certificates) ────────────────────────
+enum CertCategory {
+  COC // Certificate of Competency (ANT/ATT)
+  COP // Certificate of Proficiency (BST, AFF, PSCRB, MFA, etc.)
+  FLAG_ENDORSEMENT
+  TRAVEL_DOCUMENT
+}
+
+model CertificateSTCW {
+  id               String          @id @default(uuid())
+  seafarerId       String
+  category         CertCategory
+  certName         String          // e.g. "ANT-II", "ATT-III", "Basic Safety Training"
+  certificateNo    String
+  issuingAuthority String          // e.g. "Direktorat Jenderal Perhubungan Laut"
+  issueDate        DateTime
+  expiryDate       DateTime?       // NULL jika berlaku seumur hidup
+  fileVaultPath    String?         // Path terenkripsi di Vault Storage
+  fileChecksumSha  String?         // Checksum SHA-256 berkas fisik
+  isVerified       Boolean         @default(false)
+  verifiedAt       DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  seafarer         SeafarerProfile @relation(fields: [seafarerId], references: [id], onDelete: Cascade)
+
+  @@index([seafarerId])
+  @@index([category])
+  @@index([expiryDate])
+}
+
+// ─── 7. Rekam Medis Pelaut (MCU & P&I Fit to Work) ─────────────────────────
+enum MedicalStatus {
+  FIT_FOR_SEA_DUTY
+  FIT_WITH_RESTRICTION
+  TEMPORARY_UNFIT
+  PERMANENT_UNFIT
+}
+
+model MedicalRecord {
+  id               String          @id @default(uuid())
+  seafarerId       String
+  clinicName       String          // e.g. "Klinik Utama Pramita - P&I Approved"
+  doctorName       String
+  examinationDate  DateTime
+  expiryDate       DateTime
+  overallStatus    MedicalStatus   @default(FIT_FOR_SEA_DUTY)
+  bmi              Float?
+  colorVision      String          @default("Normal")
+  audiometryStatus String          @default("Normal")
+  certificatePath  String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  seafarer         SeafarerProfile @relation(fields: [seafarerId], references: [id], onDelete: Cascade)
+
+  @@index([seafarerId])
+  @@index([expiryDate])
+}
+
+// ─── 8. Siklus Seleksi Awak Kapal (Crew Application & ATS) ─────────────────
+enum CrewStage {
+  APPLIED             // Berkas Masuk
+  DOCUMENT_VERIFIED   // Verifikasi Buku Pelaut & Sertifikat STCW
+  TECHNICAL_INTERVIEW // Interview Master Mariner / Port Captain
+  MARLINS_ASSESSMENT  // Ujian Bahasa Inggris Maritim
+  OWNER_VETTING       // Pengajuan Matrix ke Principal / Shipowner
+  MCU_CLEARANCE       // Pemeriksaan Kesehatan P&I Club
+  PKL_SIGNING         // Penandatanganan Kontrak PKL & Sign-On
+  ONBOARD_DEPLOYED    // Sedang Berlayar
+  SIGN_OFF_LEAVE      // Selesai Kontrak / Cuti
+  REJECTED            // Ditolak
+}
+
+enum CrewApplicationSource {
+  REQUISITION        // Kandidat diproses untuk requisition kapal tertentu
+  DIRECT_TALENT_POOL // Pendaftaran mandiri, belum terikat requisition
+}
+
+model CrewApplication {
+  id               String                 @id @default(uuid())
+  requisitionId    String?                // NULL = kandidat talent pool mandiri
+  seafarerId       String
+  source           CrewApplicationSource  @default(REQUISITION)
+  currentStage     CrewStage              @default(APPLIED)
+  matchScore       Float?            // Skor AI Matrix Matcher (0 - 100)
+  rejectionReason  String?
+  vettingToken     String?           @unique // Token share publik untuk Shipowner Vetting
+  tokenExpiresAt   DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  requisition      CrewRequisition?  @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  seafarer         SeafarerProfile   @relation(fields: [seafarerId], references: [id], onDelete: Cascade)
+  vetting          VettingAssessment?
+  atsHistories     AtsHistory[]
+
+  @@unique([requisitionId, seafarerId])
+  @@index([currentStage])
+  @@index([source])
+  @@index([vettingToken])
+}
+
+model AtsHistory {
+  id               String          @id @default(uuid())
+  applicationId    String
+  fromStage        CrewStage
+  toStage          CrewStage
+  changedByUserId  String?
+  remarks          String?
+  createdAt        DateTime        @default(now())
+
+  application      CrewApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  changedBy        User?           @relation(fields: [changedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([applicationId])
+}
+
+// ─── 8b. Lead Permintaan Manning Shipowner (Inquiry Masuk) ─────────────────
+// Disimpan terpisah dari Vessel agar registry IMO tidak tercemar data lead.
+model ManningInquiry {
+  id                  String    @id @default(uuid())
+  companyName         String
+  contactPerson       String
+  workEmail           String
+  phoneWhatsApp       String?
+  vesselName          String?
+  imoNumber           String?
+  vesselType          String?
+  targetRanks         String?
+  joinPort            String?
+  expectedJoiningDate DateTime?
+  notes               String?
+  status              String    @default("NEW") // NEW | CONTACTED | CONVERTED | CLOSED
+  matchedVesselId     String?
+  requisitionId       String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([workEmail])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ─── 9. Penilaian Vetting Maritim (SIRE 2.0 & RightShip Matrix) ────────────
+enum VettingRecommendation {
+  STRONGLY_APPROVED
+  APPROVED_WITH_CONDITIONS
+  MATRIX_NON_COMPLIANT
+  REJECTED
+}
+
+model VettingAssessment {
+  id                  String                @id @default(uuid())
+  applicationId       String                @unique
+  sireMatrixScore     Float?                // 0 - 100
+  timeInRankMonths    Int                   @default(0)
+  timeOnVesselTypeMos Int                   @default(0)
+  timeWithOperatorMos Int                   @default(0)
+  marlinsPercent      Float?                // Minimum 80% for Officers
+  pairedOfficerSeaTime Int?                 // Gabungan jam layar perwira sejenis
+  recommendation      VettingRecommendation @default(APPROVED_WITH_CONDITIONS)
+  matrixSummary       String?               // Ringkasan hasil audit matriks AI
+  verifiedByMaster    String?               // Nama Capt / Chief Inspector
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  application         CrewApplication       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+// ─── 10. Perjanjian Kerja Laut (Tripartite Hubla e-PKL) ──────────────────────
+enum ContractStatus {
+  DRAFT
+  AWAITING_SEAFARER_SIGN
+  AWAITING_OWNER_SIGN
+  ENDORSED_SYAHBANDAR
+  ACTIVE_ONBOARD
+  COMPLETED
+  TERMINATED_EARLY
+}
+
+model EmploymentContractPKL {
+  id                  String          @id @default(uuid())
+  contractNo          String          @unique // e.g. "PKL-2026-HWK-084"
+  seafarerId          String
+  vesselId            String
+  rank                MaritimeRank
+  signOnDate          DateTime
+  durationMonths      Int             @default(6) // Standar kontrak 6-9 bulan
+  monthlyBasicWageIdr Float?
+  monthlyBasicWageUsd Float?
+  allotmentPercentage Float           @default(80.0) // 80% dikirim ke rekening darat
+  onboardCashAdvance  Float           @default(20.0) // 20% diambil di atas kapal
+  insurancePolicyNo   String?         // Asuransi P&I War Risk & Death/Injury
+  status              ContractStatus  @default(DRAFT)
+  pklPdfVaultPath     String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  seafarer            SeafarerProfile @relation(fields: [seafarerId], references: [id], onDelete: Cascade)
+  vessel              Vessel          @relation(fields: [vesselId], references: [id], onDelete: Cascade)
+
+  @@index([contractNo])
+  @@index([seafarerId])
+  @@index([vesselId])
+  @@index([status])
+}
+
+// ─── 11. Finansial & Allotment Penggajian Pelaut (Dual-Rail Payroll) ────────
+model PayrollRecord {
+  id                  String          @id @default(uuid())
+  seafarerId          String
+  periodMonth         Int             // 1 - 12
+  periodYear          Int             // 2026
+  basicWage           Float
+  leavePay            Float           @default(0)
+  overtimeAllowance   Float           @default(0)
+  dangerBonusCargo    Float           @default(0)
+  totalGrossWage      Float
+  allotmentAmount     Float           // Ditransfer ke keluarga di darat
+  onboardPaidAmount   Float           // Diberikan tunai di kapal
+  bankAccountTarget   String?         // Nama Bank & No Rekening Keluarga
+  taxableGross        Float           @default(0) // Bruto kena pajak (IDR) saat potong dihitung
+  pph21Amount         Float           @default(0) // PPh 21 dipotong pada masa ini (IDR)
+  netWage             Float           @default(0) // Bruto - PPh 21
+  npwpSnapshot        String?         // NPWP saat pemotongan (jejak bukti potong)
+  ptkpSnapshot        PtkpStatus?     // Status PTKP saat pemotongan
+  isDisbursed         Boolean         @default(false)
+  disbursedAt         DateTime?
+  createdAt           DateTime        @default(now())
+
+  seafarer            SeafarerProfile @relation(fields: [seafarerId], references: [id], onDelete: Cascade)
+
+  @@unique([seafarerId, periodMonth, periodYear])
+  @@index([periodYear, periodMonth])
+}
+
+// ─── 12. Audit Trail Terpusat (Immutable Audit Log) ────────────────────────
+model AuditTrail {
+  id                  String          @id @default(uuid())
+  userId              String?
+  action              String          // e.g. "STAGE_TRANSITION", "MATRIX_EVALUATED", "PKL_ENDORSED"
+  entityType          String          // "CrewApplication", "EmploymentContractPKL"
+  entityId            String
+  details             String?
+  ipAddress           String?
+  userAgent           String?
+  createdAt           DateTime        @default(now())
+
+  user                User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  // Filter jejak audit: `action` tunggal, atau `action` + rentang tanggal,
+  // selalu diurutkan `createdAt DESC`. Indeks gabungan menghindari sort
+  // tambahan pada tabel yang tumbuh paling cepat di sistem ini.
+  @@index([action, createdAt])
+  @@index([userId, createdAt])
+}
