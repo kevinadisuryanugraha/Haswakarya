@@ -198,14 +198,14 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
             <>
               {/* Main Action Buttons */}
               <div className="grid grid-cols-2 gap-2.5 pb-4 mb-3 border-b border-border-light">
-                <a
-                  href={resolveNavHref("#services", pathname)}
+                <Link
+                  href="/recruit-crew"
                   onClick={handleLinkClick}
                   className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-accent text-white font-bold text-xs rounded-lg uppercase tracking-wider text-center shadow-sm hover:bg-accent/90 transition"
                 >
                   <Ship className="w-3.5 h-3.5" />
                   <span>Recruit Crew</span>
-                </a>
+                </Link>
                 <Link
                   href="/join-as-crew"
                   onClick={handleLinkClick}

@@ -1,12 +1,5 @@
 "use client";
 
-import dynamic from 'next/dynamic';
-
-const FleetManningInquiryModal = dynamic(
-  () => import("@/components/home/FleetManningInquiryModal").then((m) => m.FleetManningInquiryModal),
-  { ssr: false }
-);
-
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -42,7 +35,6 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isRequisitionOpen, setIsRequisitionOpen] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -279,16 +271,15 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                 <span className="whitespace-nowrap">Join As Crew</span>
               </Link>
 
-              {/* Recruit Crew CTA Button: Direct Fleet Manning Requisition Console Trigger */}
-              <button
-                type="button"
-                onClick={() => setIsRequisitionOpen(true)}
+              {/* Recruit Crew CTA: dedicated requisition page, no modal */}
+              <Link
+                href="/recruit-crew"
                 className="hidden sm:inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 sm:py-2 text-xs font-bold uppercase tracking-wider text-white bg-accent hover:bg-accent/90 rounded-lg shadow-sm hover:shadow transition-all group whitespace-nowrap shrink-0 min-w-fit cursor-pointer"
                 title="Recruit Crew — Fleet Manning Requisition"
               >
                 <Ship className="w-3.5 h-3.5 shrink-0 group-hover:scale-105 transition-transform" />
                 <span className="whitespace-nowrap">Recruit Crew</span>
-              </button>
+              </Link>
 
               {/* Mobile Hamburger Toggle Button */}
               <button
@@ -368,13 +359,6 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
       <MobileDrawer
         isOpen={isMobileDrawerOpen}
         onClose={() => setIsMobileDrawerOpen(false)}
-      />
-
-      {/* Direct Principal Crewing Requisition Modal */}
-      <FleetManningInquiryModal
-        isOpen={isRequisitionOpen}
-        onClose={() => setIsRequisitionOpen(false)}
-        defaultVesselType="Oil & Chemical Tanker (SIRE)"
       />
     </>
   );

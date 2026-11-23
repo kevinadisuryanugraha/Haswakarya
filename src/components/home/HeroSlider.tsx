@@ -1,12 +1,6 @@
 "use client";
 
-import dynamic from 'next/dynamic';
-
-const FleetManningInquiryModal = dynamic(
-  () => import("./FleetManningInquiryModal").then((m) => m.FleetManningInquiryModal),
-  { ssr: false }
-);
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -26,8 +20,6 @@ export interface HeroSliderProps {
 }
 
 export const HeroSlider: React.FC<HeroSliderProps> = () => {
-  const [isInquiryOpen, setIsInquiryOpen] = useState(false);
-
   return (
     <section
       aria-label="Haswakarya Maritime Crew Agency Sovereign Hero"
@@ -115,16 +107,15 @@ export const HeroSlider: React.FC<HeroSliderProps> = () => {
 
           {/* Dual Strategic Action Buttons (Ship Owners & Seafarers) */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 mb-10">
-            {/* Primary Coral Button for Ship Owners & Principals: Opens Direct Requisition Console */}
-            <button
-              type="button"
-              onClick={() => setIsInquiryOpen(true)}
+            {/* Primary Coral Button for Ship Owners & Principals: dedicated requisition page */}
+            <Link
+              href="/recruit-crew"
               className="shimmer-btn inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-white bg-accent hover:bg-accent/90 rounded-xl shadow-lg shadow-accent/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 group text-center whitespace-nowrap cursor-pointer"
             >
               <Ship className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" />
               <span className="whitespace-nowrap">Request Qualified Crew</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
-            </button>
+            </Link>
 
             {/* Outline Action Button for Seafarers Career Portal */}
             <Link
@@ -163,13 +154,6 @@ export const HeroSlider: React.FC<HeroSliderProps> = () => {
 
         </div>
       </div>
-
-      {/* Direct Principal Crewing Requisition Console */}
-      <FleetManningInquiryModal
-        isOpen={isInquiryOpen}
-        onClose={() => setIsInquiryOpen(false)}
-        defaultVesselType="Oil & Chemical Tanker (SIRE)"
-      />
     </section>
   );
 };

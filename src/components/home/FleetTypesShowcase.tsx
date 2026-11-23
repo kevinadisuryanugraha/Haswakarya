@@ -1,14 +1,8 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const FleetManningInquiryModal = dynamic(
-  () => import('./FleetManningInquiryModal').then((m) => m.FleetManningInquiryModal),
-  { ssr: false }
-);
-
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   VESSEL_TYPES_DATA,
   VesselTypeItem,
@@ -30,7 +24,6 @@ import {
 
 export function FleetTypesShowcase() {
   const [activeVesselId, setActiveVesselId] = useState<string>(VESSEL_TYPES_DATA[0].id);
-  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const activeVessel = VESSEL_TYPES_DATA.find((v) => v.id === activeVesselId) || VESSEL_TYPES_DATA[0];
 
   return (
@@ -216,15 +209,14 @@ export function FleetTypesShowcase() {
 
               {/* Bottom Action Triggers */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-5 border-t border-slate-200">
-                <button
-                  type="button"
-                  onClick={() => setIsInquiryModalOpen(true)}
+                <Link
+                  href={`/recruit-crew?vessel=${activeVessel.id}`}
                   className="shimmer-btn inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent/90 text-white font-bold text-xs sm:text-sm shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 active:scale-95 text-center whitespace-nowrap cursor-pointer"
                 >
                   <Ship className="w-4 h-4 shrink-0" />
                   <span>Request Crew for {activeVessel.name.split('&')[0].trim()}</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
-                </button>
+                </Link>
 
                 <a
                   href="#pipeline"
@@ -242,13 +234,6 @@ export function FleetTypesShowcase() {
         </div>
 
       </div>
-
-      {/* Structured Fleet Manning Requisition Modal */}
-      <FleetManningInquiryModal
-        isOpen={isInquiryModalOpen}
-        onClose={() => setIsInquiryModalOpen(false)}
-        defaultVesselType={activeVessel.name}
-      />
     </section>
   );
 }

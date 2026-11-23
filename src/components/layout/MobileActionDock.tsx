@@ -1,12 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const FleetManningInquiryModal = dynamic(
-  () => import('@/components/home/FleetManningInquiryModal').then((m) => m.FleetManningInquiryModal),
-  { ssr: false }
-);
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -19,7 +13,6 @@ import { COMPANY_INFO, getWhatsAppUrl } from '@/data/haswakarya-data';
 
 export function MobileActionDock() {
   const pathname = usePathname();
-  const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
 
   if (pathname?.startsWith('/portal') || pathname?.startsWith('/share')) {
     return null;
@@ -60,10 +53,9 @@ export function MobileActionDock() {
               </span>
             </a>
 
-            {/* 2. Request Crew (Principal) with 21st.dev shimmer */}
-            <button
-              type="button"
-              onClick={() => setIsOwnerModalOpen(true)}
+            {/* 2. Request Crew (Principal) — dedicated requisition page */}
+            <Link
+              href="/recruit-crew"
               className="shimmer-btn flex flex-col items-center justify-center py-1.5 px-1 rounded-xl bg-accent text-white active:scale-95 transition-all text-center group shadow-md shadow-accent/25 cursor-pointer"
             >
               <div className="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-xs">
@@ -72,7 +64,7 @@ export function MobileActionDock() {
               <span className="text-[10px] font-bold tracking-tight text-white leading-none whitespace-nowrap">
                 Request Crew
               </span>
-            </button>
+            </Link>
 
             {/* 3. Seafarer Apply */}
             <Link
@@ -102,13 +94,6 @@ export function MobileActionDock() {
           </div>
         </div>
       </aside>
-
-      {/* Unified Principal Crewing Requisition Console */}
-      <FleetManningInquiryModal
-        isOpen={isOwnerModalOpen}
-        onClose={() => setIsOwnerModalOpen(false)}
-        defaultVesselType="Oil & Chemical Tanker (SIRE)"
-      />
     </>
   );
 }
