@@ -57,7 +57,12 @@ export interface DossierSource {
   vetting?: {
     recommendation: string;
     sireMatrixScore?: number | null;
+    /** Catatan keputusan shipowner dari rute endorse — bukan keluaran model. */
     matrixSummary?: string | null;
+    /** Narasi dossier hasil model (Wedge B). Tidak pernah menimpa `matrixSummary`. */
+    aiNarrative?: string | null;
+    aiNarrativeModel?: string | null;
+    aiNarrativeAt?: Date | null | string;
     verifiedByMaster?: string | null;
     updatedAt?: Date | null | string;
   } | null;
@@ -93,7 +98,14 @@ export interface VettingDossier {
     rightShipCompliant: boolean;
     strengths: string[];
     complianceGaps: string[];
+    /** Ringkasan audit: narasi model bila ada, lalu catatan shipowner, lalu matriks. */
     summary: string;
+    /** Asal `summary` — ditampilkan di UI supaya pembaca tahu siapa yang menulis. */
+    summarySource: 'ai' | 'shipowner' | 'matrix';
+    /** Model yang menyusun narasi, null bila sumbernya bukan model. */
+    narrativeModel: string | null;
+    /** Waktu narasi disusun, null bila tidak ada narasi model. */
+    narrativeAt: string | null;
   };
 }
 
@@ -210,6 +222,29 @@ function decisionFromRecommendation(
   }
 }
 
+/**
+ * Urutan sumber ringkasan audit:
+ * 1. Narasi model (`aiNarrative`) — disusun dari fakta server, boleh berubah.
+ * 2. Catatan keputusan shipowner (`matrixSummary`) — pernyataan manusia.
+ * 3. Ringkasan matriks deterministik — selalu tersedia.
+ * Narasi model tidak pernah menimpa catatan shipowner; keduanya kolom berbeda.
+ */
+export function resolveAuditSummarySource(
+  source: DossierSource
+): 'ai' | 'shipowner' | 'matrix' {
+  if (source.vetting?.aiNarrative?.trim()) return 'ai';
+  if (source.vetting?.matrixSummary?.trim()) return 'shipowner';
+  return 'matrix';
+}
+
+function resolveAuditSummary(source: DossierSource): string {
+  const aiNarrative = source.vetting?.aiNarrative?.trim();
+  if (aiNarrative) return aiNarrative;
+  const ownerNote = source.vetting?.matrixSummary?.trim();
+  if (ownerNote) return ownerNote;
+  return ''; // diisi pemanggil dari evaluasi matriks
+}
+
 /** Menyusun dossier. Mengembalikan null bila token tidak punya data sama sekali. */
 export function buildVettingDossier(source: DossierSource, now: Date): VettingDossier {
   const { seafarer } = source;
@@ -304,7 +339,14 @@ export function buildVettingDossier(source: DossierSource, now: Date): VettingDo
       rightShipCompliant: evaluation.rightShipCompliant,
       strengths: evaluation.strengths,
       complianceGaps: evaluation.complianceGaps,
-      summary: source.vetting?.matrixSummary ?? evaluation.auditSummary,
+      summary: resolveAuditSummary(source) || evaluation.auditSummary,
+      summarySource: resolveAuditSummarySource(source),
+      narrativeModel: source.vetting?.aiNarrative?.trim()
+        ? (source.vetting.aiNarrativeModel ?? null)
+        : null,
+      narrativeAt: source.vetting?.aiNarrative?.trim()
+        ? (toDate(source.vetting.aiNarrativeAt)?.toISOString() ?? null)
+        : null,
     },
   };
 }

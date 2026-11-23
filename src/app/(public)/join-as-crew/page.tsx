@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/seo/siteUrl';
 import React from 'react';
 import { CheckCircle2, Phone, ShieldCheck, FileText, Clock } from 'lucide-react';
 import { Header, Footer } from '@/components/layout';
 import { JoinFaq, JoinHero, JoinProcess, SeafarerApplicationForm } from '@/components/join-as-crew';
 import { COMPANY_INFO } from '@/data/haswakarya-data';
 
-const PAGE_URL = 'https://haswakarya.com/join-as-crew';
+const PAGE_URL = absoluteUrl('/join-as-crew');
 
 export const metadata: Metadata = {
   title: 'Join as Crew — Seafarer Application | Haswakarya Crew Agency',
@@ -57,7 +58,7 @@ const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://haswakarya.com' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
     { '@type': 'ListItem', position: 2, name: 'Join as Crew', item: PAGE_URL },
   ],
 };

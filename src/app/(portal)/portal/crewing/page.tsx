@@ -34,6 +34,16 @@ interface TriageEntry {
   model?: string | null;
 }
 
+interface NarrativeEntry {
+  loading: boolean;
+  error?: string;
+  summary?: string;
+  source?: 'ai' | 'fallback';
+  reason?: string | null;
+  model?: string | null;
+  narrativeAt?: string | null;
+}
+
 const STAGES = [
   { id: 'APPLIED', title: 'Berkas Masuk', color: 'border-slate-200 bg-slate-50/70', badge: 'bg-slate-100 text-slate-700' },
   { id: 'DOCUMENT_VERIFIED', title: 'STCW Hubla Sah', color: 'border-sky-200 bg-sky-50/40', badge: 'bg-sky-100 text-sky-800' },
@@ -49,6 +59,7 @@ export default function CrewingAtsPage() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [tokenBusyId, setTokenBusyId] = useState<string | null>(null);
   const [triage, setTriage] = useState<Record<string, TriageEntry>>({});
+  const [narrative, setNarrative] = useState<Record<string, NarrativeEntry>>({});
 
   const loadApplications = async () => {
     try {
@@ -156,6 +167,43 @@ export default function CrewingAtsPage() {
     } catch (err) {
       console.error('Failed to generate triage draft:', err);
       setTriage((prev) => ({
+        ...prev,
+        [appId]: { loading: false, error: 'Jaringan gagal. Coba lagi.' },
+      }));
+    }
+  };
+
+  const handleGenerateNarrative = async (appId: string) => {
+    setNarrative((prev) => ({ ...prev, [appId]: { loading: true } }));
+
+    try {
+      const res = await fetch(`/api/portal/applications/${appId}/dossier-narrative`, {
+        method: 'POST',
+      });
+      const json = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setNarrative((prev) => ({
+          ...prev,
+          [appId]: { loading: false, error: json.error || 'Gagal menyusun narasi dossier.' },
+        }));
+        return;
+      }
+
+      setNarrative((prev) => ({
+        ...prev,
+        [appId]: {
+          loading: false,
+          summary: json.data?.stored ?? json.data?.narrative?.summary,
+          source: json.data?.source,
+          reason: json.data?.reason ?? null,
+          model: json.data?.ai?.answeredBy ?? null,
+          narrativeAt: new Date().toISOString(),
+        },
+      }));
+    } catch (err) {
+      console.error('Failed to generate dossier narrative:', err);
+      setNarrative((prev) => ({
         ...prev,
         [appId]: { loading: false, error: 'Jaringan gagal. Coba lagi.' },
       }));
@@ -376,6 +424,53 @@ export default function CrewingAtsPage() {
 
                             <p className="text-[9px] text-slate-400 leading-snug border-t border-slate-200 pt-1">
                               Bahan pertimbangan. Keputusan tetap milik verifikator.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Narasi dossier vetting (Wedge B) */}
+                      <div className="pt-1.5 border-t border-slate-100 space-y-1.5">
+                        <button
+                          onClick={() => handleGenerateNarrative(app.id)}
+                          disabled={narrative[app.id]?.loading}
+                          title="Susun narasi dossier untuk principal dari data server (skor tidak diubah)"
+                          className="w-full px-2 py-1 rounded border border-sky-300 bg-sky-50 text-sky-800 hover:bg-sky-100 text-[10px] font-bold flex items-center justify-center gap-1 transition-colors disabled:opacity-50 cursor-pointer"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          <span>{narrative[app.id]?.loading ? 'Menyusun...' : 'AI Narasi'}</span>
+                        </button>
+
+                        {narrative[app.id]?.error && (
+                          <p className="text-[10px] text-rose-600 leading-snug">
+                            {narrative[app.id]?.error}
+                          </p>
+                        )}
+
+                        {narrative[app.id]?.summary && (
+                          <div className="rounded border border-slate-200 bg-slate-50 p-2 space-y-1.5">
+                            <div className="flex items-center justify-between gap-1">
+                              <span
+                                className={
+                                  narrative[app.id]?.source === 'ai'
+                                    ? 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200'
+                                    : 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 border border-slate-300'
+                                }
+                              >
+                                {narrative[app.id]?.source === 'ai' ? 'AI' : 'DETERMINISTIK'}
+                              </span>
+                              <span
+                                className="text-[9px] text-slate-400 truncate max-w-[90px]"
+                                title={narrative[app.id]?.model ?? ''}
+                              >
+                                {narrative[app.id]?.model ?? 'matrix engine'}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-700 leading-snug whitespace-pre-line">
+                              {narrative[app.id]?.summary}
+                            </p>
+                            <p className="text-[9px] text-slate-400 leading-snug border-t border-slate-200 pt-1">
+                              Tersimpan di dossier principal. Skor dan keputusan tidak berubah.
                             </p>
                           </div>
                         )}

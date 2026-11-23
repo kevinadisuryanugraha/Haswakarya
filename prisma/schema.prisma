@@ -378,7 +378,10 @@ model VettingAssessment {
   marlinsPercent      Float?                // Minimum 80% for Officers
   pairedOfficerSeaTime Int?                 // Gabungan jam layar perwira sejenis
   recommendation      VettingRecommendation @default(APPROVED_WITH_CONDITIONS)
-  matrixSummary       String?               // Ringkasan hasil audit matriks AI
+  matrixSummary       String?               // Catatan keputusan shipowner (dari rute endorse)
+  aiNarrative         String?               // Narasi dossier hasil model (Wedge B); tidak menimpa matrixSummary
+  aiNarrativeModel    String?               // Model yang benar-benar menjawab, untuk audit
+  aiNarrativeAt       DateTime?             // Waktu narasi disusun
   verifiedByMaster    String?               // Nama Capt / Chief Inspector
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt

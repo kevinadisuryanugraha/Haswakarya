@@ -4,6 +4,7 @@ import {
   type AiFailureReason,
   type AiMeta,
 } from './openrouter';
+import { findUnsupportedNumbersInTexts } from './numberGuard';
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -129,56 +130,19 @@ export function buildTriageFacts(input: TriageInput): TriageFacts {
   };
 }
 
-function collectNumbers(value: unknown, target: Set<number>): void {
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    target.add(value);
-    return;
-  }
-  if (typeof value === 'string') {
-    for (const match of value.matchAll(/\d+/g)) {
-      target.add(Number(match[0]));
-    }
-    return;
-  }
-  if (Array.isArray(value)) {
-    value.forEach((item) => collectNumbers(item, target));
-    return;
-  }
-  if (value && typeof value === 'object') {
-    Object.values(value as Record<string, unknown>).forEach((item) =>
-      collectNumbers(item, target)
-    );
-  }
-}
-
 /**
- * Angka 0–5 selalu diizinkan: dipakai untuk penomoran, jumlah item, dan bagian
- * dari istilah seperti "SIRE 2.0". Angka lain harus benar-benar ada pada fakta.
+ * Angka pada draf yang tidak didukung fakta. Aturan bersama ada di
+ * `numberGuard.ts`; fungsi ini mempertahankan nama lama untuk pemanggil dan
+ * test yang sudah ada.
  */
-const ALWAYS_ALLOWED_NUMBERS = new Set([0, 1, 2, 3, 4, 5]);
-
 export function findUnsupportedNumbers(
   draft: TriageDraft,
   facts: TriageFacts
 ): number[] {
-  const allowed = new Set(ALWAYS_ALLOWED_NUMBERS);
-  collectNumbers(facts, allowed);
-
-  const text = [
-    draft.summary,
-    ...draft.strengths,
-    ...draft.gaps,
-    ...draft.interviewQuestions,
-  ].join(' ');
-
-  const offenders = new Set<number>();
-  for (const match of text.matchAll(/\d+/g)) {
-    const number = Number(match[0]);
-    if (Number.isFinite(number) && !allowed.has(number)) {
-      offenders.add(number);
-    }
-  }
-  return [...offenders];
+  return findUnsupportedNumbersInTexts(
+    [draft.summary, ...draft.strengths, ...draft.gaps, ...draft.interviewQuestions],
+    facts
+  );
 }
 
 export function fallbackTriageDraft(facts: TriageFacts): TriageDraft {

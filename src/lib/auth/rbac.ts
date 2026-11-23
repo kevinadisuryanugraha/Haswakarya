@@ -119,6 +119,8 @@ export const PORTAL_ROUTE_RULES: readonly RouteRule[] = [
   { prefix: '/portal/requisitions', capabilities: ['portal.operations'] },
   { prefix: '/portal/seafarers', capabilities: ['portal.operations'] },
   { prefix: '/portal/vessels', capabilities: ['portal.operations'] },
+  // Ganti sandi adalah hak setiap akun yang login, termasuk pelaut & shipowner.
+  { prefix: '/portal/settings', capabilities: ['portal.read_own'] },
   { prefix: '/portal', capabilities: ['portal.admin', 'portal.operations', 'portal.read_own'] },
 ];
 

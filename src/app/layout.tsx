@@ -2,6 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import { Roboto } from 'next/font/google';
 import './globals.css';
 import { COMPANY_INFO } from '@/data/haswakarya-data';
+import { resolveSiteUrl } from '@/lib/seo/siteUrl';
+
+// Satuan identitas kanonik untuk metadata dan JSON-LD.
+const SITE_URL = resolveSiteUrl();
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -24,7 +28,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://haswakarya.com'),
+  metadataBase: new URL(resolveSiteUrl()),
   title: `${COMPANY_INFO.brandName} | Official Crew Manning Agency Indonesia`,
   description: `${COMPANY_INFO.brandName} (${COMPANY_INFO.entityName}) is an official Crew Manning Agency delivering qualified, certified, and MLC 2006 compliant Indonesian seafarers to vessel owners worldwide. SIUKAK licensed by Ministry of Transportation RI. NIB: ${COMPANY_INFO.nib}.`,
   keywords: [
@@ -33,7 +37,7 @@ export const metadata: Metadata = {
     'maritime crew recruitment', 'STCW certified crew', 'crew agency jakarta',
   ],
   alternates: {
-    canonical: 'https://haswakarya.com',
+    canonical: resolveSiteUrl(),
   },
   manifest: '/manifest.webmanifest',
   appleWebApp: {
@@ -53,7 +57,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${COMPANY_INFO.brandName} — Global Crew Manning Partner`,
     description: `Trusted maritime crew manning agency in Indonesia. SIUKAK licensed, MLC 2006 compliant, with offices in Batam & Jakarta.`,
-    url: 'https://haswakarya.com',
+    url: `${SITE_URL}`,
     type: 'website',
     locale: 'en_US',
     siteName: COMPANY_INFO.brandName,
@@ -83,7 +87,7 @@ const schemaOrg = {
   '@graph': [
     {
       '@type': 'EmploymentAgency',
-      '@id': 'https://haswakarya.com/#agency',
+      '@id': `${SITE_URL}/#agency`,
       name: COMPANY_INFO.brandName,
       legalName: COMPANY_INFO.entityName,
       description: COMPANY_INFO.about,
@@ -119,7 +123,7 @@ const schemaOrg = {
     },
     {
       '@type': 'Corporation',
-      '@id': 'https://haswakarya.com/#corporation',
+      '@id': `${SITE_URL}/#corporation`,
       name: COMPANY_INFO.entityName,
       legalName: COMPANY_INFO.entityName,
       taxID: COMPANY_INFO.nib,
@@ -129,52 +133,52 @@ const schemaOrg = {
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://haswakarya.com/#website',
-      url: 'https://haswakarya.com',
+      '@id': `${SITE_URL}/#website`,
+      url: `${SITE_URL}`,
       name: `${COMPANY_INFO.brandName} — Official Indonesian Crew Manning Agency`,
       description: 'SIUKAK licensed and MLC 2006 compliant crew manning agency connecting qualified Indonesian seafarers with global vessel fleets.',
-      publisher: { '@id': 'https://haswakarya.com/#agency' },
+      publisher: { '@id': `${SITE_URL}/#agency` },
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://haswakarya.com/#services',
+        target: `${SITE_URL}/#services`,
         'query-input': 'required name=search_term_string',
       },
     },
     {
       '@type': 'BreadcrumbList',
-      '@id': 'https://haswakarya.com/#breadcrumbs',
+      '@id': `${SITE_URL}/#breadcrumbs`,
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://haswakarya.com/#hero' },
-        { '@type': 'ListItem', position: 2, name: 'Company Profile & Vision', item: 'https://haswakarya.com/#about' },
-        { '@type': 'ListItem', position: 3, name: 'Business Scope', item: 'https://haswakarya.com/#services' },
-        { '@type': 'ListItem', position: 4, name: 'Commercial Fleets', item: 'https://haswakarya.com/#fleet' },
-        { '@type': 'ListItem', position: 5, name: '9-Stage Vetting Pipeline', item: 'https://haswakarya.com/#pipeline' },
-        { '@type': 'ListItem', position: 6, name: 'Seafarer Qualifications', item: 'https://haswakarya.com/#qualifications' },
-        { '@type': 'ListItem', position: 7, name: 'Why Choose Us', item: 'https://haswakarya.com/#why-us' },
-        { '@type': 'ListItem', position: 8, name: 'Legal SIUKAK Verification', item: 'https://haswakarya.com/#legals' },
-        { '@type': 'ListItem', position: 9, name: 'Compliance & Manning FAQ', item: 'https://haswakarya.com/#faq' },
-        { '@type': 'ListItem', position: 10, name: 'Offices & Contact Coordinates', item: 'https://haswakarya.com/#contact' },
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/#hero` },
+        { '@type': 'ListItem', position: 2, name: 'Company Profile & Vision', item: `${SITE_URL}/#about` },
+        { '@type': 'ListItem', position: 3, name: 'Business Scope', item: `${SITE_URL}/#services` },
+        { '@type': 'ListItem', position: 4, name: 'Commercial Fleets', item: `${SITE_URL}/#fleet` },
+        { '@type': 'ListItem', position: 5, name: '9-Stage Vetting Pipeline', item: `${SITE_URL}/#pipeline` },
+        { '@type': 'ListItem', position: 6, name: 'Seafarer Qualifications', item: `${SITE_URL}/#qualifications` },
+        { '@type': 'ListItem', position: 7, name: 'Why Choose Us', item: `${SITE_URL}/#why-us` },
+        { '@type': 'ListItem', position: 8, name: 'Legal SIUKAK Verification', item: `${SITE_URL}/#legals` },
+        { '@type': 'ListItem', position: 9, name: 'Compliance & Manning FAQ', item: `${SITE_URL}/#faq` },
+        { '@type': 'ListItem', position: 10, name: 'Offices & Contact Coordinates', item: `${SITE_URL}/#contact` },
       ],
     },
     {
       '@type': 'Service',
-      '@id': 'https://haswakarya.com/#service-recruitment',
+      '@id': `${SITE_URL}/#service-recruitment`,
       name: 'Global Crew Recruitment & Sourcing',
-      provider: { '@id': 'https://haswakarya.com/#agency' },
+      provider: { '@id': `${SITE_URL}/#agency` },
       serviceType: 'Maritime Crew Manning',
       description: 'End-to-end recruitment for certified officers and ratings on commercial vessels under strict DGST and MLC 2006 protocols.',
     },
     {
       '@type': 'Service',
-      '@id': 'https://haswakarya.com/#service-compliance',
+      '@id': `${SITE_URL}/#service-compliance`,
       name: 'Documentation & MLC 2006 Compliance Management',
-      provider: { '@id': 'https://haswakarya.com/#agency' },
+      provider: { '@id': `${SITE_URL}/#agency` },
       serviceType: 'Maritime Legal Facilitation',
       description: 'Flag State endorsements, Tripartite PKL agreements, medical fitness clearances, and transit seafarer visa processing.',
     },
     {
       '@type': 'FAQPage',
-      '@id': 'https://haswakarya.com/#faq',
+      '@id': `${SITE_URL}/#faq`,
       mainEntity: [
         {
           '@type': 'Question',

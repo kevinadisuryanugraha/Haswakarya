@@ -20,6 +20,7 @@ const BREADCRUMBS: Array<{ prefix: string; label: string; exact?: boolean }> = [
   { prefix: '/portal/contracts', label: 'Kontrak PKL Tripartit' },
   { prefix: '/portal/payroll', label: 'Payroll & Remittance' },
   { prefix: '/portal/audit', label: 'Jejak Audit' },
+  { prefix: '/portal/settings', label: 'Keamanan Akun' },
   { prefix: '/portal', label: 'Ringkasan Armada', exact: true },
 ];
 

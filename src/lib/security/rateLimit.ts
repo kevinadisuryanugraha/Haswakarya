@@ -129,6 +129,16 @@ export const RATE_LIMIT_BUCKETS = {
    * menjaga agar satu staf tidak menghabiskannya.
    */
   'ai-triage': { limit: 10, windowMs: 60 * 60 * 1000 },
+  /**
+   * Narasi dossier vetting: bucket terpisah dari triage supaya satu staf yang
+   * menyusun banyak dossier tidak menghabiskan kuota triage ATS.
+   */
+  'ai-dossier': { limit: 10, windowMs: 60 * 60 * 1000 },
+  /**
+   * Ganti sandi: maksimum 5 percobaan per 15 menit per pengguna. Batas ini
+   * melindungi dari penebakan sandi lama lewat sesi yang sudah dicuri.
+   */
+  'password-change': { limit: 5, windowMs: 15 * 60 * 1000 },
 } as const;
 
 export type RateLimitBucket = keyof typeof RATE_LIMIT_BUCKETS;
@@ -145,12 +155,20 @@ export const vettingDecisionLimiter = createRateLimiter(RATE_LIMIT_BUCKETS['vett
 /** Draf triage AI: maksimum 10 permintaan per jam per pengguna. */
 export const aiTriageLimiter = createRateLimiter(RATE_LIMIT_BUCKETS['ai-triage']);
 
+/** Narasi dossier vetting: maksimum 10 permintaan per jam per pengguna. */
+export const aiDossierLimiter = createRateLimiter(RATE_LIMIT_BUCKETS['ai-dossier']);
+
+/** Ganti sandi: maksimum 5 percobaan per 15 menit per pengguna. */
+export const passwordChangeLimiter = createRateLimiter(RATE_LIMIT_BUCKETS['password-change']);
+
 /** Limiter memori per bucket, dipakai sebagai fallback backend Redis. */
 export const MEMORY_LIMITERS: Record<RateLimitBucket, RateLimiter> = {
   'public-form': publicFormLimiter,
   login: loginLimiter,
   'vetting-decision': vettingDecisionLimiter,
   'ai-triage': aiTriageLimiter,
+  'ai-dossier': aiDossierLimiter,
+  'password-change': passwordChangeLimiter,
 };
 
 /** Mengembalikan header HTTP standar untuk rate limit. */

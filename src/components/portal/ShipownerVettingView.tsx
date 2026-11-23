@@ -14,6 +14,9 @@ import {
   Loader2,
   ShieldAlert,
   XCircle,
+  Sparkles,
+  PenLine,
+  Cpu,
 } from 'lucide-react';
 import type { VettingDossier, VettingDecisionState } from '@/lib/vetting/dossier';
 
@@ -280,6 +283,56 @@ export function ShipownerVettingView({ dossier }: ShipownerVettingViewProps) {
                   ))}
                 </div>
               )}
+            </div>
+
+            <div>
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 mb-3">
+                {dossier.audit.summarySource === 'ai' ? (
+                  <Sparkles className="w-4 h-4 text-sky-600" />
+                ) : dossier.audit.summarySource === 'shipowner' ? (
+                  <PenLine className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <Cpu className="w-4 h-4 text-slate-500" />
+                )}
+                Ringkasan Dossier
+              </h3>
+              <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <span
+                  className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
+                    dossier.audit.summarySource === 'ai'
+                      ? 'bg-sky-50 text-sky-700 border-sky-200'
+                      : dossier.audit.summarySource === 'shipowner'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-slate-100 text-slate-600 border-slate-200'
+                  }`}
+                >
+                  {dossier.audit.summarySource === 'ai'
+                    ? 'Narasi AI dari data server'
+                    : dossier.audit.summarySource === 'shipowner'
+                      ? 'Catatan keputusan shipowner'
+                      : 'Ringkasan matriks deterministik'}
+                </span>
+                <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
+                  {dossier.audit.summary}
+                </p>
+                {dossier.audit.narrativeModel && (
+                  <p className="text-[10px] font-mono text-slate-400 break-all">
+                    {dossier.audit.narrativeModel}
+                    {dossier.audit.narrativeAt
+                      ? ` · ${new Date(dossier.audit.narrativeAt).toLocaleString('id-ID', {
+                          dateStyle: 'medium',
+                          timeStyle: 'short',
+                        })}`
+                      : ''}
+                  </p>
+                )}
+                {dossier.audit.summarySource === 'ai' && (
+                  <p className="text-[10px] text-slate-400 leading-relaxed">
+                    Narasi disusun dari agregat data server; skor dan keputusan tetap berasal dari
+                    mesin matriks SIRE 2.0 dan keputusan shipowner.
+                  </p>
+                )}
+              </div>
             </div>
 
             <div>

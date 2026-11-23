@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/seo/siteUrl';
 import React from 'react';
 import { CheckCircle2, Clock, Mail, Phone, ShieldCheck, Ship } from 'lucide-react';
 import { Header, Footer } from '@/components/layout';
@@ -6,7 +7,7 @@ import { RecruitFaq, RecruitHero, RecruitProcess, RecruitRequisitionForm } from 
 import { COMPANY_INFO } from '@/data/haswakarya-data';
 import { resolveVesselTypeParam } from '@/lib/public/manningRequisition';
 
-const PAGE_URL = 'https://haswakarya.com/recruit-crew';
+const PAGE_URL = absoluteUrl('/recruit-crew');
 
 export const metadata: Metadata = {
   title: 'Recruit Crew — Fleet Manning Requisition | Haswakarya Crew Agency',
@@ -58,7 +59,7 @@ const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://haswakarya.com' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
     { '@type': 'ListItem', position: 2, name: 'Recruit Crew', item: PAGE_URL },
   ],
 };

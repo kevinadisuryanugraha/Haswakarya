@@ -17,6 +17,7 @@ import {
   FileText,
   CreditCard,
   ScrollText,
+  KeyRound,
   X,
 } from 'lucide-react';
 
@@ -77,6 +78,11 @@ export function PortalSidebar({ open = false, onClose }: PortalSidebarProps) {
       label: 'Jejak Audit',
       href: '/portal/audit',
       icon: ScrollText,
+    },
+    {
+      label: 'Keamanan Akun',
+      href: '/portal/settings',
+      icon: KeyRound,
     },
   ];
 
