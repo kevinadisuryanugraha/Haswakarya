@@ -947,7 +947,7 @@ export const QUICK_NAV_CARDS: QuickNavCardItem[] = [
     subtitle: "Global Deployment",
     description:
       "Join our verified talent pool for international deployments with transparent, zero-fee ethical recruitment and continuous training.",
-    href: "#qualifications",
+    href: "/join-as-crew",
     ctaText: "Join as Seafarer",
     badge: "For Crew",
     iconName: "UserPlus",

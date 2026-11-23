@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import {
   X,
@@ -20,6 +21,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { COMPANY_INFO, NAV_MENU_ITEMS, NavMenuItem, QUICK_SEARCH_INDEX } from "@/data/haswakarya-data";
+import { resolveNavHref } from "@/lib/navigation/anchors";
 
 export interface MobileDrawerProps {
   isOpen: boolean;
@@ -27,6 +29,7 @@ export interface MobileDrawerProps {
 }
 
 export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) => {
+  const pathname = usePathname();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -106,7 +109,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-light bg-surface/80">
-          <Link href="#hero" onClick={handleLinkClick} className="flex items-center gap-2">
+          <Link href={resolveNavHref("#hero", pathname)} onClick={handleLinkClick} className="flex items-center gap-2">
             <div className="relative w-36 h-11">
               <Image
                 src="/images/logo-haswakarya.png"
@@ -163,7 +166,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
                   {quickSearchResults.map((result, idx) => (
                     <a
                       key={`${result.title}-${idx}`}
-                      href={result.href}
+                      href={resolveNavHref(result.href, pathname)}
                       target={result.isExternal ? "_blank" : undefined}
                       rel={result.isExternal ? "noopener noreferrer" : undefined}
                       onClick={handleLinkClick}
@@ -196,21 +199,21 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
               {/* Main Action Buttons */}
               <div className="grid grid-cols-2 gap-2.5 pb-4 mb-3 border-b border-border-light">
                 <a
-                  href="#services"
+                  href={resolveNavHref("#services", pathname)}
                   onClick={handleLinkClick}
                   className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-accent text-white font-bold text-xs rounded-lg uppercase tracking-wider text-center shadow-sm hover:bg-accent/90 transition"
                 >
                   <Ship className="w-3.5 h-3.5" />
                   <span>Recruit Crew</span>
                 </a>
-                <a
-                  href="#qualifications"
+                <Link
+                  href="/join-as-crew"
                   onClick={handleLinkClick}
                   className="flex items-center justify-center gap-1.5 py-2.5 px-3 border border-primary text-primary font-bold text-xs rounded-lg uppercase tracking-wider text-center hover:bg-primary hover:text-white transition"
                 >
                   <Users className="w-3.5 h-3.5" />
                   <span>Join As Crew</span>
-                </a>
+                </Link>
               </div>
 
               {/* Navigation Accordion Items */}
@@ -224,7 +227,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
                       return (
                         <li key={item.label}>
                           <Link
-                            href={item.href}
+                            href={resolveNavHref(item.href, pathname)}
                             onClick={handleLinkClick}
                             className="flex items-center justify-between py-2.5 px-3 text-sm font-semibold text-navy hover:text-primary hover:bg-ice/20 rounded-lg transition"
                           >
@@ -257,7 +260,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
                             {item.children?.map((subItem) => (
                               <li key={subItem.label}>
                                 <Link
-                                  href={subItem.href}
+                                  href={resolveNavHref(subItem.href, pathname)}
                                   onClick={handleLinkClick}
                                   className="block py-2 px-3 text-xs rounded-md text-slate-700 hover:text-primary hover:bg-ice/40 transition group"
                                 >

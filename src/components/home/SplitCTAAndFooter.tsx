@@ -2,7 +2,9 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { COMPANY_INFO, getWhatsAppUrl } from '@/data/haswakarya-data';
+import { resolveNavHref } from '@/lib/navigation/anchors';
 import { Phone, Mail, MapPin, ExternalLink, MessageCircle, ArrowUp, Ship, ShieldCheck, Building2 } from 'lucide-react';
 
 export function SplitCTA() {
@@ -151,6 +153,7 @@ export function SplitCTA() {
 }
 
 export function Footer() {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
@@ -272,7 +275,7 @@ export function Footer() {
               ].map((link) => (
                 <li key={link.href}>
                   <a
-                    href={link.href}
+                    href={resolveNavHref(link.href, pathname)}
                     className="text-white/60 hover:text-ice transition-colors flex items-center gap-1.5 py-0.5 group"
                   >
                     <span className="text-primary text-[10px] group-hover:translate-x-0.5 transition-transform">›</span>

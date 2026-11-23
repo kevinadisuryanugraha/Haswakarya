@@ -6,13 +6,10 @@ const FleetManningInquiryModal = dynamic(
   () => import("@/components/home/FleetManningInquiryModal").then((m) => m.FleetManningInquiryModal),
   { ssr: false }
 );
-const SeafarerApplicationModal = dynamic(
-  () => import("@/components/home/SeafarerApplicationModal").then((m) => m.SeafarerApplicationModal),
-  { ssr: false }
-);
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import {
   Search,
@@ -31,19 +28,20 @@ import {
 import { TopBar } from "./TopBar";
 import { MobileDrawer } from "./MobileDrawer";
 import { COMPANY_INFO, NAV_MENU_ITEMS, NavMenuItem, QUICK_SEARCH_INDEX } from "@/data/haswakarya-data";
+import { resolveNavHref } from "@/lib/navigation/anchors";
 
 export interface HeaderProps {
   showTopBar?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isRequisitionOpen, setIsRequisitionOpen] = useState(false);
-  const [isSeafarerAppOpen, setIsSeafarerAppOpen] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -169,7 +167,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                   return (
                     <Link
                       key={item.label}
-                      href={item.href}
+                      href={resolveNavHref(item.href, pathname)}
                       className="px-1.5 xl:px-2.5 py-1.5 text-xs xl:text-xs 2xl:text-sm font-semibold text-navy hover:text-primary transition-colors rounded-md hover:bg-slate-50 whitespace-nowrap"                    >
                       {item.label}
                     </Link>
@@ -217,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                           {item.children?.map((sub) => (
                             <Link
                               key={sub.label}
-                              href={sub.href}
+                              href={resolveNavHref(sub.href, pathname)}
                               onClick={() => setActiveDropdown(null)}
                               className="block px-4 py-2.5 hover:bg-ice/25 transition-colors border-l-2 border-transparent hover:border-primary group"
                             >
@@ -271,15 +269,14 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                 <span className="hidden 2xl:inline">H-COS Portal</span>
               </Link>
 
-              {/* Join as Crew Button: Direct Seafarer Dossier Console Trigger */}
-              <button
-                type="button"
-                onClick={() => setIsSeafarerAppOpen(true)}
-                className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary border border-primary/50 hover:border-primary hover:bg-primary hover:text-white rounded-lg transition-all shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+              {/* Join as Crew: dedicated application page */}
+              <Link
+                href="/join-as-crew"
+                className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary border border-primary/50 hover:border-primary hover:bg-primary hover:text-white rounded-lg transition-all shadow-2xs whitespace-nowrap shrink-0"
               >
                 <Users className="w-3.5 h-3.5 shrink-0" />
                 <span className="whitespace-nowrap">Join As Crew</span>
-              </button>
+              </Link>
 
               {/* Recruit Crew CTA Button: Direct Fleet Manning Requisition Console Trigger */}
               <button
@@ -338,7 +335,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                   {filteredSearchResults.map((result, idx) => (
                     <a
                       key={`${result.title}-${idx}`}
-                      href={result.href}
+                      href={resolveNavHref(result.href, pathname)}
                       target={result.isExternal ? "_blank" : undefined}
                       rel={result.isExternal ? "noopener noreferrer" : undefined}
                       onClick={() => setIsSearchOpen(false)}
@@ -377,12 +374,6 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
         isOpen={isRequisitionOpen}
         onClose={() => setIsRequisitionOpen(false)}
         defaultVesselType="Oil & Chemical Tanker (SIRE)"
-      />
-
-      {/* Direct Seafarer Career Dossier Modal */}
-      <SeafarerApplicationModal
-        isOpen={isSeafarerAppOpen}
-        onClose={() => setIsSeafarerAppOpen(false)}
       />
     </>
   );

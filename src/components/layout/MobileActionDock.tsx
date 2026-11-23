@@ -6,12 +6,8 @@ const FleetManningInquiryModal = dynamic(
   () => import('@/components/home/FleetManningInquiryModal').then((m) => m.FleetManningInquiryModal),
   { ssr: false }
 );
-const SeafarerApplicationModal = dynamic(
-  () => import('@/components/home/SeafarerApplicationModal').then((m) => m.SeafarerApplicationModal),
-  { ssr: false }
-);
-
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   MessageSquare,
@@ -24,7 +20,6 @@ import { COMPANY_INFO, getWhatsAppUrl } from '@/data/haswakarya-data';
 export function MobileActionDock() {
   const pathname = usePathname();
   const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
-  const [isSeafarerModalOpen, setIsSeafarerModalOpen] = useState(false);
 
   if (pathname?.startsWith('/portal') || pathname?.startsWith('/share')) {
     return null;
@@ -80,10 +75,9 @@ export function MobileActionDock() {
             </button>
 
             {/* 3. Seafarer Apply */}
-            <button
-              type="button"
-              onClick={() => setIsSeafarerModalOpen(true)}
-              className="flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all text-center group cursor-pointer"
+            <Link
+              href={pathname === '/join-as-crew' ? '#apply' : '/join-as-crew'}
+              className="flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all text-center group"
             >
               <div className="w-8 h-8 rounded-lg bg-primary/30 text-sky flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
                 <Users className="w-4 h-4" />
@@ -91,7 +85,7 @@ export function MobileActionDock() {
               <span className="text-[10px] font-semibold tracking-tight text-white leading-none">
                 Pelaut Karir
               </span>
-            </button>
+            </Link>
 
             {/* 4. Direct Call Batam/Jakarta */}
             <a
@@ -114,12 +108,6 @@ export function MobileActionDock() {
         isOpen={isOwnerModalOpen}
         onClose={() => setIsOwnerModalOpen(false)}
         defaultVesselType="Oil & Chemical Tanker (SIRE)"
-      />
-
-      {/* Unified Seafarer Candidate Dossier Portal */}
-      <SeafarerApplicationModal
-        isOpen={isSeafarerModalOpen}
-        onClose={() => setIsSeafarerModalOpen(false)}
       />
     </>
   );

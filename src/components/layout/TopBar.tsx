@@ -66,7 +66,7 @@ export const TopBar: React.FC = () => {
         <div className="hidden lg:flex items-center gap-3.5 xl:gap-4 shrink-0 text-slate-300">
           {/* SIUKAK & NIB Legal Credential */}
           <Link
-            href="#legals"
+            href="/#legals"
             className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors font-medium group shrink-0"
             title="Verified SIUKAK Kementerian Perhubungan RI"
           >
@@ -91,7 +91,7 @@ export const TopBar: React.FC = () => {
 
           {/* Office Hubs */}
           <Link
-            href="#contact"
+            href="/#contact"
             className="hidden 2xl:inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors shrink-0"
             title="Batam Head Office & Jakarta Branch Office"
           >

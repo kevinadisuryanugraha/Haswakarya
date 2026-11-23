@@ -1,13 +1,7 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const SeafarerApplicationModal = dynamic(
-  () => import('./SeafarerApplicationModal').then((m) => m.SeafarerApplicationModal),
-  { ssr: false }
-);
-
-import React, { useState } from 'react';
+import React from 'react';
+import Link from 'next/link';
 import { SEAFARER_QUALIFICATIONS, WHY_CHOOSE_US, CORE_VALUES, getWhatsAppUrl } from '@/data/haswakarya-data';
 import {
   CheckCircle2, Award, Shield, ShieldCheck
@@ -15,8 +9,6 @@ import {
 import { getMaritimeIcon } from '@/lib/icons';
 
 export function QualificationsBento() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <section id="qualifications" className="py-20 px-4 sm:px-6 lg:px-8 bg-surface relative overflow-hidden scroll-mt-24 md:scroll-mt-28">
       {/* Grainient Texture Overlay */}
@@ -147,22 +139,15 @@ export function QualificationsBento() {
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary hover:bg-navy text-white text-xs font-bold shadow-sm transition-all whitespace-nowrap shrink-0 self-end sm:self-auto cursor-pointer"
+          <Link
+            href="/join-as-crew"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary hover:bg-navy text-white text-xs font-bold shadow-sm transition-all whitespace-nowrap shrink-0 self-end sm:self-auto"
           >
             <span>Apply Free</span>
             <CheckCircle2 className="w-3.5 h-3.5 text-ice" />
-          </button>
+          </Link>
         </div>
       </div>
-
-      {/* Seafarer Rapid Application Modal */}
-      <SeafarerApplicationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </section>
   );
 }

@@ -6,13 +6,9 @@ const FleetManningInquiryModal = dynamic(
   () => import("./FleetManningInquiryModal").then((m) => m.FleetManningInquiryModal),
   { ssr: false }
 );
-const SeafarerApplicationModal = dynamic(
-  () => import("./SeafarerApplicationModal").then((m) => m.SeafarerApplicationModal),
-  { ssr: false }
-);
-
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   ArrowRight,
   Ship,
@@ -31,7 +27,6 @@ export interface HeroSliderProps {
 
 export const HeroSlider: React.FC<HeroSliderProps> = () => {
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
-  const [isSeafarerModalOpen, setIsSeafarerModalOpen] = useState(false);
 
   return (
     <section
@@ -132,14 +127,13 @@ export const HeroSlider: React.FC<HeroSliderProps> = () => {
             </button>
 
             {/* Outline Action Button for Seafarers Career Portal */}
-            <button
-              type="button"
-              onClick={() => setIsSeafarerModalOpen(true)}
-              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-ice hover:text-white border-2 border-primary bg-primary/20 hover:bg-primary/40 hover:border-sky rounded-xl shadow-sm hover:-translate-y-0.5 transition-all duration-200 group text-center whitespace-nowrap cursor-pointer"
+            <Link
+              href="/join-as-crew"
+              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-ice hover:text-white border-2 border-primary bg-primary/20 hover:bg-primary/40 hover:border-sky rounded-xl shadow-sm hover:-translate-y-0.5 transition-all duration-200 group text-center whitespace-nowrap"
             >
               <Users className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" />
               <span className="whitespace-nowrap">Apply as Seafarer</span>
-            </button>
+            </Link>
           </div>
 
           {/* Institutional Trust & Compliance Row (Zero Clutter) */}
@@ -175,12 +169,6 @@ export const HeroSlider: React.FC<HeroSliderProps> = () => {
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
         defaultVesselType="Oil & Chemical Tanker (SIRE)"
-      />
-
-      {/* Direct Seafarer Career Dossier Portal */}
-      <SeafarerApplicationModal
-        isOpen={isSeafarerModalOpen}
-        onClose={() => setIsSeafarerModalOpen(false)}
       />
     </section>
   );
