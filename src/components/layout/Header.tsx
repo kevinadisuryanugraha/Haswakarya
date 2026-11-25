@@ -17,7 +17,11 @@ import {
 } from "lucide-react";
 import { TopBar } from "./TopBar";
 import { MobileDrawer } from "./MobileDrawer";
-import { NAV_MENU_ITEMS, NavMenuItem, QUICK_SEARCH_INDEX } from "@/data/haswakarya-data";
+import {
+  NAV_MENU_ITEMS,
+  NavMenuItem,
+  QUICK_SEARCH_INDEX,
+} from "@/data/haswakarya-data";
 import { resolveNavHref } from "@/lib/navigation/anchors";
 
 export interface HeaderProps {
@@ -92,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
     ? QUICK_SEARCH_INDEX.filter(
         (item) =>
           item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.category.toLowerCase().includes(searchQuery.toLowerCase())
+          item.category.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : QUICK_SEARCH_INDEX.slice(0, 6);
 
@@ -187,7 +191,9 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                         <span className="whitespace-nowrap">{item.label}</span>
                         <ChevronDown
                           className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 shrink-0 ${
-                            isOpen ? "rotate-180 text-primary" : "text-slate-400"
+                            isOpen
+                              ? "rotate-180 text-primary"
+                              : "text-slate-400"
                           }`}
                         />
                       </button>
@@ -321,7 +327,9 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
               {/* Search Suggestions & Results */}
               <div className="mt-3">
                 <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  {searchQuery.trim() ? "Search Results" : "Quick Links & Suggestions"}
+                  {searchQuery.trim()
+                    ? "Search Results"
+                    : "Quick Links & Suggestions"}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-60 overflow-y-auto">
                   {filteredSearchResults.map((result, idx) => (
@@ -329,7 +337,9 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                       key={`${result.title}-${idx}`}
                       href={resolveNavHref(result.href, pathname)}
                       target={result.isExternal ? "_blank" : undefined}
-                      rel={result.isExternal ? "noopener noreferrer" : undefined}
+                      rel={
+                        result.isExternal ? "noopener noreferrer" : undefined
+                      }
                       onClick={() => setIsSearchOpen(false)}
                       className="flex items-center justify-between p-2 rounded-lg hover:bg-ice/30 border border-transparent hover:border-ice transition group"
                     >

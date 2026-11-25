@@ -219,7 +219,7 @@ export function PwaRegister() {
       {installedToast && (
         <aside
           aria-live="polite"
-          className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 bg-[#06122A] text-white border border-emerald-500/40 p-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm animate-in slide-in-from-bottom duration-300"
+          className="fixed bottom-24 sm:bottom-8 left-4 sm:left-8 sm:right-auto z-50 bg-[#06122A] text-white border border-emerald-500/40 p-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm animate-in slide-in-from-bottom duration-300"
         >
           <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-5 h-5" />
@@ -233,11 +233,11 @@ export function PwaRegister() {
         </aside>
       )}
 
-      {/* ── Interactive PWA Install Banner ──────────────────────────────── */}
+      {/* ── Interactive PWA Install Banner (Positioned Bottom-Left on Desktop to prevent collision with Top button) ── */}
       {showInstallBanner && !isStandalone && (
         <section
           aria-label="Pemberitahuan Instalasi Aplikasi PWA"
-          className="fixed bottom-24 sm:bottom-6 left-3 right-3 sm:left-auto sm:right-6 max-w-md z-40 bg-[#06122A]/95 backdrop-blur-xl border border-sky-400/30 rounded-2xl p-4 text-white shadow-[0_12px_40px_rgba(6,18,42,0.6)] animate-in slide-in-from-bottom duration-300"
+          className="fixed bottom-24 sm:bottom-8 left-3 right-3 sm:left-8 sm:right-auto max-w-md z-40 bg-[#06122A]/95 backdrop-blur-xl border border-sky-400/30 rounded-2xl p-4 text-white shadow-[0_12px_40px_rgba(6,18,42,0.6)] animate-in slide-in-from-bottom duration-300"
         >
           <div className="flex items-start justify-between gap-3 mb-2.5">
             <div className="flex items-center gap-2.5">
