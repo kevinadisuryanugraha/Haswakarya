@@ -125,32 +125,23 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
               isScrolled ? "h-16 md:h-18" : "h-18 md:h-20"
             }`}
           >
-            {/* Left Zone: Corporate Logo, Institutional Brand Wordmark & Nearby Navigation */}
-            <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 xl:gap-8 min-w-0">
-              {/* Corporate Logo & Institutional Brand Wordmark */}
+            {/* Left Zone: Corporate Logo & Nearby Navigation */}
+            <div className="flex items-center gap-5 sm:gap-6 lg:gap-7 xl:gap-8 min-w-0">
+              {/* Corporate Logo — Clean True-Ratio Fit with Zero Empty Box */}
               <Link
                 href="/#hero"
-                className="flex items-center gap-2.5 sm:gap-3 shrink-0 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg py-1"
+                className="flex items-center shrink-0 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg py-1"
                 aria-label="PT Haswakarya Andalan Sedare Home"
               >
-                <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 shrink-0 transition-transform group-hover:scale-105">
+                <div className="relative w-11 h-11 sm:w-12 sm:h-12 shrink-0 transition-transform group-hover:scale-105">
                   <Image
                     src="/images/logo-haswakarya.png"
-                    alt="Haswakarya Logo"
+                    alt="PT Haswakarya Andalan Sedare - Crew Manning Agency"
                     fill
-                    sizes="(max-width: 640px) 36px, (max-width: 768px) 40px, 44px"
-                    className="object-contain"
+                    sizes="(max-width: 640px) 44px, 48px"
+                    className="object-contain object-left"
                     priority
                   />
-                </div>
-
-                <div className="flex flex-col justify-center select-none">
-                  <span className="text-sm sm:text-base lg:text-[17px] font-extrabold tracking-tight text-navy leading-none group-hover:text-primary transition-colors">
-                    HASWAKARYA
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.14em] uppercase text-sky-800 leading-tight mt-1 whitespace-nowrap">
-                    Crew Manning Agency
-                  </span>
                 </div>
               </Link>
 
