@@ -12,17 +12,13 @@ import {
   Ship,
   Users,
   ShieldCheck,
-  Phone,
   ArrowRight,
   ExternalLink,
-  MapPin,
-  FileCheck2,
 } from "lucide-react";
 import { TopBar } from "./TopBar";
 import { MobileDrawer } from "./MobileDrawer";
-import { COMPANY_INFO, NAV_MENU_ITEMS, NavMenuItem, QUICK_SEARCH_INDEX } from "@/data/haswakarya-data";
+import { NAV_MENU_ITEMS, NavMenuItem, QUICK_SEARCH_INDEX } from "@/data/haswakarya-data";
 import { resolveNavHref } from "@/lib/navigation/anchors";
-import { Container } from "./Container";
 
 export interface HeaderProps {
   showTopBar?: boolean;
@@ -115,41 +111,41 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
             className={`transition-all duration-300 ease-in-out ${
               isScrolled
                 ? "max-h-0 opacity-0 overflow-hidden"
-                : "max-h-12 opacity-100 overflow-visible"
+                : "max-h-16 opacity-100 overflow-visible"
             }`}
           >
             <TopBar />
           </div>
         )}
 
-        {/* Main Navigation Container */}
-        <Container>
+        {/* Main Navigation Container with Strict Anti-Collision & Proper Gaps */}
+        <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div
-            className={`flex items-center justify-between transition-all duration-300 ${
+            className={`flex items-center justify-between gap-4 transition-all duration-300 ${
               isScrolled ? "h-16 md:h-18" : "h-18 md:h-20"
             }`}
           >
             {/* Corporate Logo */}
             <Link
-              href="#hero"
-              className="flex items-center shrink-0 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg py-1 mr-2 sm:mr-4"
+              href="/#hero"
+              className="flex items-center shrink-0 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg py-1 mr-1 sm:mr-3"
               aria-label="PT Haswakarya Andalan Sedare Home"
             >
-              <div className="relative w-36 sm:w-44 lg:w-44 xl:w-52 h-10 sm:h-11 md:h-12 transition-transform group-hover:scale-[1.02]">
+              <div className="relative w-36 sm:w-40 lg:w-40 xl:w-44 2xl:w-48 h-9 sm:h-10 md:h-11 transition-transform group-hover:scale-[1.02]">
                 <Image
                   src="/images/logo-haswakarya.png"
                   alt="PT Haswakarya Andalan Sedare - Crew Manning Agency"
                   fill
-                  sizes="(max-width: 640px) 140px, (max-width: 768px) 180px, 210px"
+                  sizes="(max-width: 640px) 140px, (max-width: 768px) 160px, 192px"
                   className="object-contain object-left"
                   priority
                 />
               </div>
             </Link>
 
-            {/* Desktop Navigation Menu */}
+            {/* Desktop Navigation Menu: shrink-0 so it NEVER gets squished or overflows */}
             <nav
-              className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 shrink min-w-0"
+              className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 shrink-0"
               aria-label="Main Navigation"
             >
               {NAV_MENU_ITEMS.map((item: NavMenuItem) => {
@@ -161,7 +157,8 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                     <Link
                       key={item.label}
                       href={resolveNavHref(item.href, pathname)}
-                      className="px-1.5 xl:px-2.5 py-1.5 text-xs xl:text-xs 2xl:text-sm font-semibold text-navy hover:text-primary transition-colors rounded-md hover:bg-slate-50 whitespace-nowrap"                    >
+                      className="px-1.5 xl:px-2 2xl:px-2.5 py-1.5 text-[11px] xl:text-xs 2xl:text-sm font-semibold text-navy hover:text-primary transition-colors rounded-md hover:bg-slate-50 whitespace-nowrap"
+                    >
                       {item.label}
                     </Link>
                   );
@@ -177,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                     <button
                       type="button"
                       onClick={() => handleDropdownClick(item.label)}
-                      className={`inline-flex items-center gap-1 px-1.5 xl:px-2.5 py-1.5 text-xs xl:text-xs 2xl:text-sm font-semibold rounded-md transition-colors whitespace-nowrap ${
+                      className={`inline-flex items-center gap-0.5 xl:gap-1 px-1.5 xl:px-2 2xl:px-2.5 py-1.5 text-[11px] xl:text-xs 2xl:text-sm font-semibold rounded-md transition-colors whitespace-nowrap ${
                         isOpen
                           ? "text-primary bg-ice/40"
                           : "text-navy hover:text-primary hover:bg-slate-50"
@@ -187,7 +184,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                     >
                       <span className="whitespace-nowrap">{item.label}</span>
                       <ChevronDown
-                        className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${
+                        className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 shrink-0 ${
                           isOpen ? "rotate-180 text-primary" : "text-slate-400"
                         }`}
                       />
@@ -231,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
               })}
             </nav>
 
-            {/* Right Side Actions: Search & CTAs */}
+            {/* Right Side Actions: Cleanly proportioned, zero overlapping */}
             <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-2.5 shrink-0 flex-nowrap">
               {/* Search Toggle Button */}
               <button
@@ -259,22 +256,22 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                 title="Open Haswakarya Crewing Operating System"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                <span className="hidden 2xl:inline">H-COS Portal</span>
+                <span>H-COS Portal</span>
               </Link>
 
-              {/* Join as Crew: dedicated application page */}
+              {/* Join as Crew: dedicated page (Active on 2xl to preserve breathing room) */}
               <Link
                 href="/join-as-crew"
-                className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary border border-primary/50 hover:border-primary hover:bg-primary hover:text-white rounded-lg transition-all shadow-2xs whitespace-nowrap shrink-0"
+                className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary border border-primary/50 hover:border-primary hover:bg-primary hover:text-white rounded-lg transition-all shadow-2xs whitespace-nowrap shrink-0"
               >
                 <Users className="w-3.5 h-3.5 shrink-0" />
                 <span className="whitespace-nowrap">Join As Crew</span>
               </Link>
 
-              {/* Recruit Crew CTA: dedicated requisition page, no modal */}
+              {/* Recruit Crew CTA Button: Primary business conversion button, always prominent */}
               <Link
                 href="/recruit-crew"
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 sm:py-2 text-xs font-bold uppercase tracking-wider text-white bg-accent hover:bg-accent/90 rounded-lg shadow-sm hover:shadow transition-all group whitespace-nowrap shrink-0 min-w-fit cursor-pointer"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white bg-accent hover:bg-accent/90 rounded-lg shadow-sm hover:shadow transition-all group whitespace-nowrap shrink-0 min-w-fit cursor-pointer"
                 title="Recruit Crew — Fleet Manning Requisition"
               >
                 <Ship className="w-3.5 h-3.5 shrink-0 group-hover:scale-105 transition-transform" />
@@ -293,12 +290,12 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
               </button>
             </div>
           </div>
-        </Container>
+        </div>
 
         {/* Quick Search Overlay Panel */}
         {isSearchOpen && (
           <div className="w-full bg-white border-t border-b border-border-light shadow-xl py-4 animate-in fade-in slide-in-from-top-1 duration-150">
-            <Container>
+            <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
               <div className="relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
@@ -350,7 +347,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
                   ))}
                 </div>
               </div>
-            </Container>
+            </div>
           </div>
         )}
       </header>

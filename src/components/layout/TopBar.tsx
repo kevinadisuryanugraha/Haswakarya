@@ -1,114 +1,218 @@
 import React from "react";
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import {
-  Printer,
-  Mail,
-  ShieldCheck,
   Award,
+  Mail,
   MapPin,
   MessageSquare,
+  Printer,
+  ShieldCheck,
 } from "lucide-react";
-import { COMPANY_INFO } from "@/data/haswakarya-data";
-import { Container } from "./Container";
+import {
+  TOP_BAR,
+  TOP_BAR_REVEAL,
+  type TopBarItemId,
+  type TopBarLink,
+  type TopBarTone,
+} from "@/data/siteTopBar";
+import { cn } from "@/lib/utils";
+
+/**
+ * TopBar Perusahaan Maritim Haswakarya.
+ *
+ * Arsitektur Anti-Tabrakan:
+ * - Terbagi menjadi DUA ZONA TEGAS (Zone Left = Kontak, Zone Right = Kredensial & Status).
+ * - TIDAK menggunakan 3-elemen justify-between yang dapat memicu tabrakan di tengah.
+ * - Zone Left diikat di sisi kiri, Zone Right diikat di sisi kanan dengan gap pengaman.
+ * - Tangga reveal menyembunyikan item sekunder (Fax & Hubs) pada layar laptop/desktop standar (< 1536px)
+ *   sehingga selalu ada ruang kosong minimal 200px di tengah.
+ */
+
+const ICONS: Partial<Record<TopBarItemId, LucideIcon>> = {
+  whatsapp: MessageSquare,
+  email: Mail,
+  fax: Printer,
+  nib: ShieldCheck,
+  mlc: Award,
+  hubs: MapPin,
+};
+
+const TONE: Record<TopBarTone, string> = {
+  emerald: "text-emerald-400",
+  sky: "text-sky-400",
+  slate: "text-slate-400",
+  amber: "text-amber-400",
+  accent: "text-accent",
+  none: "",
+};
+
+const ITEM_BASE =
+  "inline-flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-4 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy";
+const ITEM_INTERACTIVE = "text-slate-300 transition-colors hover:text-white";
+const ITEM_STATIC = "text-slate-400";
+const DIVIDER = "h-3 w-px shrink-0 bg-white/20";
+
+function ItemValue({ item }: { item: TopBarLink }) {
+  if (item.id === "nib") {
+    return (
+      <>
+        <span className="text-slate-400">{item.label}</span>
+        <strong className="font-semibold tracking-wide text-white">
+          {item.value}
+        </strong>
+      </>
+    );
+  }
+
+  if (item.id === "email") {
+    return (
+      <span className="font-medium text-slate-200">
+        {item.value}
+      </span>
+    );
+  }
+
+  if (item.id === "mlc") {
+    return (
+      <span>{item.value}</span>
+    );
+  }
+
+  return (
+    <>
+      {item.label ? <span className="font-semibold text-white">{item.label}</span> : null}
+      <span className="font-medium text-slate-200">{item.value}</span>
+    </>
+  );
+}
+
+function StripItem({ item }: { item: TopBarLink }) {
+  const Icon = ICONS[item.id];
+  const interactive = Boolean(item.href);
+  const className = cn(
+    ITEM_BASE,
+    interactive ? ITEM_INTERACTIVE : ITEM_STATIC,
+  );
+
+  const content = (
+    <>
+      {Icon ? (
+        <Icon
+          aria-hidden="true"
+          className={cn(
+            "h-3.5 w-3.5 shrink-0",
+            TONE[item.tone],
+            interactive && "transition-transform group-hover:scale-110",
+          )}
+        />
+      ) : null}
+      <ItemValue item={item} />
+    </>
+  );
+
+  if (!item.href) {
+    return (
+      <span className={className} title={item.title}>
+        {content}
+      </span>
+    );
+  }
+
+  const shared = {
+    className: cn(className, "group"),
+    title: item.title,
+    "aria-label": item.ariaLabel,
+  };
+
+  if (item.href.startsWith("/")) {
+    return (
+      <Link href={item.href} {...shared}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <a
+      href={item.href}
+      {...shared}
+      {...(item.external
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
+    >
+      {content}
+    </a>
+  );
+}
+
+function StripList({
+  items,
+  className,
+}: {
+  items: TopBarLink[];
+  className?: string;
+}) {
+  return (
+    <ul className={cn("flex items-center", className)}>
+      {items.map((item, index) => (
+        <React.Fragment key={item.id}>
+          {index > 0 ? (
+            <li
+              aria-hidden="true"
+              className={cn("mx-2 sm:mx-3 h-3 w-px bg-white/20 shrink-0", TOP_BAR_REVEAL[item.id])}
+            />
+          ) : null}
+          <li
+            data-topbar-item={item.id}
+            className={cn("items-center shrink-0", TOP_BAR_REVEAL[item.id])}
+          >
+            <StripItem item={item} />
+          </li>
+        </React.Fragment>
+      ))}
+    </ul>
+  );
+}
 
 export const TopBar: React.FC = () => {
   return (
     <aside
       aria-label="Corporate quick contacts and compliance credentials"
-      className="w-full bg-[#06122A] text-slate-300 border-b border-navy-800 text-xs font-medium"
+      className="w-full border-b border-white/10 bg-[#06122A] text-[11px] font-medium leading-4 text-slate-300 select-none"
     >
-      <Container className="py-2 flex flex-row items-center justify-between gap-3 sm:gap-4 min-h-[38px]">
-        {/* Left Side: Corporate Communication Channels */}
-        <div className="flex items-center gap-3 sm:gap-4 xl:gap-5 min-w-0">
-          {/* WhatsApp 24/7 Hotline */}
-          <a
-            href={COMPANY_INFO.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors group whitespace-nowrap shrink-0"
-            title="Chat via Official WhatsApp 24/7 Hotline"
-          >
-            <MessageSquare className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform shrink-0" />
-            <span className="font-semibold text-white hidden sm:inline">WhatsApp:</span>
-            <span className="whitespace-nowrap font-medium text-slate-200">{COMPANY_INFO.phoneWhatsApp}</span>
-          </a>
-
-          <span className="text-slate-600 hidden sm:inline" aria-hidden="true">
-            |
-          </span>
-
-          {/* Official Email Dispatch */}
-          <a
-            href={`mailto:${COMPANY_INFO.email}`}
-            className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors group whitespace-nowrap shrink-0"
-            title="Official Crewing Inquiries & CV Dispatch"
-            aria-label={`Email ${COMPANY_INFO.email}`}
-          >
-            <Mail className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform shrink-0" />
-            <span className="hidden sm:inline whitespace-nowrap font-medium text-slate-200">{COMPANY_INFO.email}</span>
-          </a>
-
-          <span className="text-slate-600 hidden xl:inline" aria-hidden="true">
-            |
-          </span>
-
-          {/* Batam Head Office Fax */}
-          <a
-            href={`tel:${COMPANY_INFO.headOfficeStructured.fax?.replace(/[^0-9+]/g, "") || "+62778326066"}`}
-            className="hidden xl:inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition-colors whitespace-nowrap shrink-0"
-            title="Batam Head Office Fax Coordinate"
-          >
-            <Printer className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span>Fax: {COMPANY_INFO.fax}</span>
-          </a>
+      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 lg:py-2 flex items-center justify-between gap-4">
+        {/* Zone Kiri: Kontak Resmi Perusahaan */}
+        <div className="flex items-center shrink-0 min-w-0">
+          <StripList items={TOP_BAR.contacts} />
         </div>
 
-        {/* Right Side: Compliance Credentials & Operational Active Status */}
-        <div className="hidden lg:flex items-center gap-3.5 xl:gap-4 shrink-0 text-slate-300">
-          {/* SIUKAK & NIB Legal Credential */}
-          <Link
-            href="/#legals"
-            className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors font-medium group shrink-0"
-            title="Verified SIUKAK Kementerian Perhubungan RI"
+        {/* Zone Kanan: Kredensial SIUKAK, MLC, Hubs & Status Operasional */}
+        <div className="flex items-center shrink-0">
+          <StripList items={TOP_BAR.credentials} />
+
+          <span
+            aria-hidden="true"
+            className={cn("mx-2 sm:mx-3 h-3 w-px bg-white/20 shrink-0", TOP_BAR_REVEAL.status)}
+          />
+
+          {/* Status Operasional GMT+7 Active */}
+          <div
+            data-topbar-item="status"
+            title={TOP_BAR.status.title}
+            className={cn(
+              "items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-950/70 px-2.5 py-0.5 font-mono text-[10px] font-medium leading-4 tracking-wide text-emerald-300 shrink-0",
+              TOP_BAR_REVEAL.status,
+            )}
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform shrink-0" />
-            <span>
-              SIUKAK &amp; NIB:{" "}
-              <strong className="font-bold text-white tracking-wide">
-                {COMPANY_INFO.nib}
-              </strong>
-            </span>
-          </Link>
-
-          <span className="w-1 h-1 rounded-full bg-slate-600 shrink-0" aria-hidden="true" />
-
-          {/* MLC 2006 Standard */}
-          <div className="inline-flex items-center gap-1.5 text-slate-300 shrink-0" title="ILO MLC 2006 Regulation Compliant">
-            <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span>MLC 2006 Compliant</span>
-          </div>
-
-          <span className="w-1 h-1 rounded-full bg-slate-600 shrink-0 hidden xl:inline-block" aria-hidden="true" />
-
-          {/* Office Hubs */}
-          <Link
-            href="/#contact"
-            className="hidden 2xl:inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors shrink-0"
-            title="Batam Head Office & Jakarta Branch Office"
-          >
-            <MapPin className="w-3.5 h-3.5 text-accent shrink-0" />
-            <span>Batam HQ &amp; Jakarta Branch</span>
-          </Link>
-
-          <span className="w-1 h-1 rounded-full bg-slate-600 shrink-0 hidden 2xl:inline-block" aria-hidden="true" />
-
-          {/* Operational Hours Indicator */}
-          <div className="hidden xl:inline-flex items-center gap-1.5 text-[10px] text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-0.5 rounded-full font-mono font-medium tracking-wide shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span>GMT+7 (WIB) Active</span>
+            <span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400 motion-safe:animate-pulse"
+            />
+            <span>{TOP_BAR.status.value}</span>
           </div>
         </div>
-      </Container>
+      </div>
     </aside>
   );
 };

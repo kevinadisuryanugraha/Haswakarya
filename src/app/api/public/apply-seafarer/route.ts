@@ -64,7 +64,7 @@ async function handlePOST(req: NextRequest) {
 
     const existingUser = await prisma.user.findUnique({
       where: { email: normalizedEmail },
-      select: { id: true, role: true, seafarerProfile: { select: { id: true } } },
+      select: { id: true, role: true, seafarerProfile: { select: { id: true, seamanBookNo: true } } },
     });
 
     const created = await prisma.$transaction(async (tx) => {
@@ -78,7 +78,7 @@ async function handlePOST(req: NextRequest) {
             passwordHash: await bcrypt.hash(randomBytes(18).toString('base64url'), 10),
             role: UserRole.CANDIDATE_SEAFARER,
           },
-          select: { id: true, role: true, seafarerProfile: { select: { id: true } } },
+          select: { id: true, role: true, seafarerProfile: { select: { id: true, seamanBookNo: true } } },
         }));
 
       const profile =
@@ -97,7 +97,7 @@ async function handlePOST(req: NextRequest) {
             totalSeaTimeDays: (input.seaTimeMonths ?? 0) * 30,
             marlinsScore: input.marlinsScore ?? null,
           },
-          select: { id: true },
+          select: { id: true, seamanBookNo: true },
         }));
 
       // Satu pendaftaran aktif per pelaut; hindari duplikasi talent pool.
@@ -107,7 +107,12 @@ async function handlePOST(req: NextRequest) {
       });
 
       if (existingApplication) {
-        return { seafarerId: profile.id, applicationId: null as string | null };
+        return {
+          seafarerId: profile.id,
+          applicationId: existingApplication.id,
+          seamanBookNo: profile.seamanBookNo,
+          isExisting: true,
+        };
       }
 
       const application = await tx.crewApplication.create({
@@ -159,21 +164,29 @@ async function handlePOST(req: NextRequest) {
         },
       });
 
-      return { seafarerId: profile.id, applicationId: application.id as string | null };
+      return {
+        seafarerId: profile.id,
+        applicationId: application.id,
+        seamanBookNo: profile.seamanBookNo,
+        isExisting: false,
+      };
     });
 
     // Evaluasi matriks: masuk antrean bila Redis tersedia, selain itu inline.
     // Kegagalan antrean tidak boleh menggagalkan pendaftaran yang sudah tersimpan.
     let queueOutcome: string | null = null;
-    if (created.applicationId) {
+    if (created.applicationId && !created.isExisting) {
       queueOutcome = await enqueueMatrixEvaluation(created.applicationId);
     }
 
     return NextResponse.json(
       {
         success: true,
-        message:
-          'Pendaftaran tersimpan di Talent Pool Haswakarya. Tim crewing akan menghubungi Anda via WhatsApp.',
+        message: created.isExisting
+          ? 'Berkas Anda sudah aktif dalam Talent Pool Haswakarya. Data profil Anda telah diperbarui.'
+          : 'Pendaftaran tersimpan di Talent Pool Haswakarya. Tim crewing akan menghubungi Anda via WhatsApp.',
+        applicationId: created.applicationId,
+        seamanBookNo: created.seamanBookNo,
         seafarerId: created.seafarerId,
         matrixEvaluation: queueOutcome,
       },

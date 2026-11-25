@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { 
   Users, 
   Search, 
@@ -14,10 +15,17 @@ import {
   ChevronRight,
   ArrowRight,
   CheckCircle2,
+  AlertTriangle,
+  X,
   Sparkles
 } from 'lucide-react';
 
 import { CREW_STAGE_COLUMNS, nextCrewStage } from '@/lib/ats/stageOrder';
+
+const CertificateVaultModal = dynamic(
+  () => import('@/components/portal/CertificateVaultModal').then((m) => m.CertificateVaultModal),
+  { ssr: false }
+);
 
 interface TriageDraftView {
   summary: string;
@@ -53,6 +61,16 @@ export default function CrewingAtsPage() {
   const [tokenBusyId, setTokenBusyId] = useState<string | null>(null);
   const [triage, setTriage] = useState<Record<string, TriageEntry>>({});
   const [narrative, setNarrative] = useState<Record<string, NarrativeEntry>>({});
+  const [selectedVaultSeafarer, setSelectedVaultSeafarer] = useState<{
+    id: string;
+    fullName: string;
+    seamanBookNo: string;
+  } | null>(null);
+  const [complianceError, setComplianceError] = useState<{
+    title: string;
+    message: string;
+    seafarer: { id: string; fullName: string; seamanBookNo: string };
+  } | null>(null);
 
   const loadApplications = async () => {
     try {
@@ -79,6 +97,7 @@ export default function CrewingAtsPage() {
 
     try {
       setUpdatingId(appId);
+      setComplianceError(null);
       const res = await fetch(`/api/portal/applications/${appId}/stage`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -87,7 +106,25 @@ export default function CrewingAtsPage() {
 
       if (res.ok) {
         loadApplications();
+        return;
       }
+
+      const json = await res.json().catch(() => ({}));
+      if (res.status === 422 && json.complianceBlocked) {
+        const targetApp = applications.find((a) => a.id === appId);
+        setComplianceError({
+          title: 'Defisiensi Kepatuhan STCW / SIRE 2.0 Terdeteksi',
+          message: json.error || 'Pelaut tidak dapat ditugaskan karena sertifikat atau MCU kedaluwarsa.',
+          seafarer: {
+            id: targetApp?.seafarer?.id || '',
+            fullName: targetApp?.seafarer?.user?.fullName || 'Pelaut',
+            seamanBookNo: targetApp?.seafarer?.seamanBookNo || '',
+          },
+        });
+        return;
+      }
+
+      window.alert(json.error || 'Gagal memindahkan tahap kandidat.');
     } catch (err) {
       console.error('Failed to advance stage:', err);
     } finally {
