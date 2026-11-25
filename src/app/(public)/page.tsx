@@ -15,7 +15,6 @@ import {
   SplitCTA,
   Footer,
 } from '@/components/home';
-import { MobileActionDock } from '@/components/layout';
 
 export default function HomePage() {
   return (
@@ -67,9 +66,6 @@ export default function HomePage() {
 
       {/* 11. Multi-Column Maritime Footer */}
       <Footer />
-
-      {/* 12. Mobile Quick Action Dock (fixed bottom, mobile only) */}
-      <MobileActionDock />
     </>
   );
 }

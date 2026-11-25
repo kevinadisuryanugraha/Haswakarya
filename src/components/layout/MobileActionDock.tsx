@@ -1,144 +1,152 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  Home,
   MessageSquare,
-  PhoneCall,
   Ship,
   Users,
-  Download,
   ShieldCheck,
 } from 'lucide-react';
-import { COMPANY_INFO, getWhatsAppUrl } from '@/data/haswakarya-data';
+import { getWhatsAppUrl } from '@/data/haswakarya-data';
 
 export function MobileActionDock() {
   const pathname = usePathname();
-  const [isStandalone, setIsStandalone] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const isStandaloneMode =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as unknown as { standalone?: boolean }).standalone === true;
-    setIsStandalone(isStandaloneMode);
-  }, []);
-
+  // Jangan render dock di halaman portal internal atau halaman share vetting
   if (pathname?.startsWith('/portal') || pathname?.startsWith('/share')) {
     return null;
   }
 
-  const handleInstallClick = () => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('haswakarya:prompt-pwa-install'));
-    }
-  };
+  const isHome = pathname === '/';
+  const isJoin = pathname === '/join-as-crew';
+  const isRecruit = pathname === '/recruit-crew';
+  const isPortal = pathname?.startsWith('/portal') ?? false;
 
   return (
-    <aside
-      aria-label="Bilah Aksi Cepat Ponsel (Mobile Action Dock)"
-      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden print:hidden"
+    <nav
+      aria-label="Bilah Navigasi Utama Ponsel"
+      className="fixed bottom-0 inset-x-0 z-40 lg:hidden print:hidden pointer-events-auto"
     >
-      {/* Status mini bar with Institutional SIUKAK & MLC 2006 Trust Marks */}
-      <div className="bg-[#040c1c]/95 backdrop-blur-md border-t border-sky-500/20 px-3 py-1 flex items-center justify-between text-[10px] text-white/80">
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="text-white font-medium">Ops Desk 24/7 Active</span>
-        </div>
-        <div className="flex items-center gap-1 text-sky-300/90 text-[10px]">
-          <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" />
-          <span>SIUKAK &amp; MLC 2006 Official</span>
-        </div>
-      </div>
-
-      {/* Primary 5-Zone Mobile Action Dock */}
-      <div className="bg-[#06122A]/95 backdrop-blur-xl border-t border-white/10 px-2 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.5)]">
-        <div className="grid grid-cols-5 gap-1 max-w-lg mx-auto">
-          {/* 1. Direct WhatsApp Hotline */}
-          <a
-            href={getWhatsAppUrl('Halo Haswakarya Crew Agency, saya ingin terhubung dengan tim operasional 24/7.')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all text-center group"
+      <div className="bg-[#06122A]/95 backdrop-blur-xl border-t border-sky-500/20 shadow-[0_-8px_30px_rgba(2,6,23,0.6)] px-2 pt-1 pb-[calc(env(safe-area-inset-bottom,0px)+0.4rem)]">
+        <div className="max-w-md mx-auto grid grid-cols-5 items-end text-center">
+          {/* 1. Beranda / Home */}
+          <Link
+            href="/"
+            aria-current={isHome ? 'page' : undefined}
+            className="flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all group active:scale-95"
           >
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-              <MessageSquare className="w-4 h-4" />
+            <div
+              className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
+                isHome
+                  ? 'text-sky-400 bg-sky-500/20 shadow-sm shadow-sky-500/20'
+                  : 'text-slate-400 group-hover:text-white group-hover:bg-white/5'
+              }`}
+            >
+              <Home className="w-4.5 h-4.5 stroke-[1.8]" />
             </div>
-            <span className="text-[9px] font-semibold tracking-tight text-white leading-none">
-              WhatsApp
+            <span
+              className={`text-[9.5px] tracking-tight leading-none mt-1 transition-colors ${
+                isHome
+                  ? 'text-sky-300 font-semibold'
+                  : 'text-slate-400 group-hover:text-slate-200 font-medium'
+              }`}
+            >
+              Home
             </span>
-          </a>
+          </Link>
 
-          {/* 2. Request Crew (Principal / Shipowner) — High-Visibility Anchor Button */}
+          {/* 2. Karir Pelaut / Join Crew */}
+          <Link
+            href="/join-as-crew"
+            aria-current={isJoin ? 'page' : undefined}
+            className="flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all group active:scale-95"
+          >
+            <div
+              className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
+                isJoin
+                  ? 'text-sky-400 bg-sky-500/20 shadow-sm shadow-sky-500/20'
+                  : 'text-slate-400 group-hover:text-white group-hover:bg-white/5'
+              }`}
+            >
+              <Users className="w-4.5 h-4.5 stroke-[1.8]" />
+            </div>
+            <span
+              className={`text-[9.5px] tracking-tight leading-none mt-1 transition-colors ${
+                isJoin
+                  ? 'text-sky-300 font-semibold'
+                  : 'text-slate-400 group-hover:text-slate-200 font-medium'
+              }`}
+            >
+              Karir Pelaut
+            </span>
+          </Link>
+
+          {/* 3. Pusat Aksi Hero: Recruit Crew (Untuk Principal / Shipowner) */}
           <Link
             href="/recruit-crew"
-            className="shimmer-btn flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl bg-accent text-white active:scale-95 transition-all text-center group shadow-md shadow-accent/25 cursor-pointer"
+            aria-label="Ajukan Kebutuhan Kru Kapal (Recruit Crew)"
+            aria-current={isRecruit ? 'page' : undefined}
+            className="relative -top-2 flex flex-col items-center justify-center group focus:outline-none"
           >
-            <div className="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-xs">
-              <Ship className="w-4 h-4" />
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#EA580C] via-[#F97316] to-[#FB923C] text-white flex items-center justify-center shadow-[0_6px_20px_rgba(234,88,12,0.45)] border-2 border-[#06122A] group-active:scale-95 group-hover:scale-105 transition-all">
+              <Ship className="w-5 h-5 text-white drop-shadow-xs stroke-[2]" />
             </div>
-            <span className="text-[9px] font-bold tracking-tight text-white leading-none whitespace-nowrap">
+            <span className="text-[9.5px] font-bold text-white tracking-tight mt-0.5 whitespace-nowrap">
               Recruit Crew
             </span>
           </Link>
 
-          {/* 3. Seafarer Apply / Karir Pelaut */}
+          {/* 4. Portal H-COS (Verifikasi Dokumen & Enterprise Portal) */}
           <Link
-            href={pathname === '/join-as-crew' ? '#apply' : '/join-as-crew'}
-            className="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all text-center group"
+            href="/portal"
+            aria-current={isPortal ? 'page' : undefined}
+            className="flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all group active:scale-95"
           >
-            <div className="w-8 h-8 rounded-lg bg-primary/30 text-sky flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-              <Users className="w-4 h-4" />
+            <div
+              className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
+                isPortal
+                  ? 'text-sky-400 bg-sky-500/20 shadow-sm shadow-sky-500/20'
+                  : 'text-slate-400 group-hover:text-white group-hover:bg-white/5'
+              }`}
+            >
+              <ShieldCheck className="w-4.5 h-4.5 stroke-[1.8]" />
             </div>
-            <span className="text-[9px] font-semibold tracking-tight text-white leading-none">
-              Pelaut Karir
+            <span
+              className={`text-[9.5px] tracking-tight leading-none mt-1 transition-colors ${
+                isPortal
+                  ? 'text-sky-300 font-semibold'
+                  : 'text-slate-400 group-hover:text-slate-200 font-medium'
+              }`}
+            >
+              H-COS
             </span>
           </Link>
 
-          {/* 4. Direct Call Batam/Jakarta Operations Desk */}
+          {/* 5. WhatsApp 24/7 Ops Desk */}
           <a
-            href={`tel:${COMPANY_INFO.whatsappClean}`}
-            className="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all text-center group"
+            href={getWhatsAppUrl('Halo Haswakarya Crew Agency, saya ingin terhubung dengan tim operasional 24/7.')}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Hubungi WhatsApp Operasional 24/7"
+            className="flex flex-col items-center justify-center py-1 px-0.5 rounded-xl transition-all group active:scale-95"
           >
-            <div className="w-8 h-8 rounded-lg bg-white/10 text-slate-200 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-              <PhoneCall className="w-4 h-4" />
+            <div className="relative w-8 h-8 rounded-xl flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/10 transition-all">
+              <MessageSquare className="w-4.5 h-4.5 stroke-[1.8] group-hover:scale-110 transition-transform" />
+              {/* Status Live Indicator Pulsa 24/7 */}
+              <span className="absolute top-1 right-1 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              </span>
             </div>
-            <span className="text-[9px] font-semibold tracking-tight text-white leading-none">
-              Hotline
+            <span className="text-[9.5px] font-medium tracking-tight leading-none mt-1 text-slate-400 group-hover:text-emerald-300 transition-colors">
+              WhatsApp
             </span>
           </a>
-
-          {/* 5. PWA Install / H-COS Portal Toggle */}
-          {isStandalone ? (
-            <Link
-              href="/portal"
-              className="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl text-amber-300 hover:text-amber-200 hover:bg-amber-400/10 active:scale-95 transition-all text-center group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <span className="text-[9px] font-bold tracking-tight text-amber-300 leading-none">
-                H-COS
-              </span>
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={handleInstallClick}
-              aria-label="Instal Aplikasi PWA Haswakarya"
-              className="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl text-sky-200 hover:text-white hover:bg-sky-400/10 active:scale-95 transition-all text-center group cursor-pointer"
-            >
-              <div className="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-300 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                <Download className="w-4 h-4" />
-              </div>
-              <span className="text-[9px] font-bold tracking-tight text-sky-200 leading-none whitespace-nowrap">
-                Instal App
-              </span>
-            </button>
-          )}
         </div>
       </div>
-    </aside>
+    </nav>
   );
 }
