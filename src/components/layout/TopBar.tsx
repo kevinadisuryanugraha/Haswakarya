@@ -181,7 +181,7 @@ export const TopBar: React.FC = () => {
       aria-label="Corporate quick contacts and compliance credentials"
       className="w-full border-b border-white/10 bg-[#06122A] text-[11px] font-medium leading-4 text-slate-300 select-none"
     >
-      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 lg:py-2 flex items-center justify-between gap-4">
+      <div className="site-container py-1.5 lg:py-2 flex items-center justify-between gap-4">
         {/* Zone Kiri: Kontak Resmi Perusahaan */}
         <div className="flex items-center shrink-0 min-w-0">
           <StripList items={TOP_BAR.contacts} />

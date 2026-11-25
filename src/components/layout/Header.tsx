@@ -118,8 +118,8 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
           </div>
         )}
 
-        {/* Main Navigation Container with Strict Anti-Collision & Proper Gaps */}
-        <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Navigation Container with Strict Anti-Collision & Canonical Alignment */}
+        <div className="site-container">
           <div
             className={`flex items-center justify-between gap-4 transition-all duration-300 ${
               isScrolled ? "h-16 md:h-18" : "h-18 md:h-20"
@@ -131,7 +131,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
               className="flex items-center shrink-0 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg py-1 mr-1 sm:mr-3"
               aria-label="PT Haswakarya Andalan Sedare Home"
             >
-              <div className="relative w-36 sm:w-40 lg:w-40 xl:w-44 2xl:w-48 h-9 sm:h-10 md:h-11 transition-transform group-hover:scale-[1.02]">
+              <div className="relative w-36 sm:w-40 lg:w-40 xl:w-44 h-9 sm:h-10 md:h-11 transition-transform group-hover:scale-[1.02]">
                 <Image
                   src="/images/logo-haswakarya.png"
                   alt="PT Haswakarya Andalan Sedare - Crew Manning Agency"
@@ -295,7 +295,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
         {/* Quick Search Overlay Panel */}
         {isSearchOpen && (
           <div className="w-full bg-white border-t border-b border-border-light shadow-xl py-4 animate-in fade-in slide-in-from-top-1 duration-150">
-            <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="site-container">
               <div className="relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
