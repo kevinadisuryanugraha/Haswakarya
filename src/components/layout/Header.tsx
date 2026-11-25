@@ -125,108 +125,120 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true }) => {
               isScrolled ? "h-16 md:h-18" : "h-18 md:h-20"
             }`}
           >
-            {/* Corporate Logo */}
-            <Link
-              href="/#hero"
-              className="flex items-center shrink-0 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg py-1 mr-1 sm:mr-3"
-              aria-label="PT Haswakarya Andalan Sedare Home"
-            >
-              <div className="relative w-36 sm:w-40 lg:w-40 xl:w-44 h-9 sm:h-10 md:h-11 transition-transform group-hover:scale-[1.02]">
-                <Image
-                  src="/images/logo-haswakarya.png"
-                  alt="PT Haswakarya Andalan Sedare - Crew Manning Agency"
-                  fill
-                  sizes="(max-width: 640px) 140px, (max-width: 768px) 160px, 192px"
-                  className="object-contain object-left"
-                  priority
-                />
-              </div>
-            </Link>
+            {/* Left Zone: Corporate Logo, Institutional Brand Wordmark & Nearby Navigation */}
+            <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 xl:gap-8 min-w-0">
+              {/* Corporate Logo & Institutional Brand Wordmark */}
+              <Link
+                href="/#hero"
+                className="flex items-center gap-2.5 sm:gap-3 shrink-0 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg py-1"
+                aria-label="PT Haswakarya Andalan Sedare Home"
+              >
+                <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 shrink-0 transition-transform group-hover:scale-105">
+                  <Image
+                    src="/images/logo-haswakarya.png"
+                    alt="Haswakarya Logo"
+                    fill
+                    sizes="(max-width: 640px) 36px, (max-width: 768px) 40px, 44px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
 
-            {/* Desktop Navigation Menu: shrink-0 so it NEVER gets squished or overflows */}
-            <nav
-              className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 shrink-0"
-              aria-label="Main Navigation"
-            >
-              {NAV_MENU_ITEMS.map((item: NavMenuItem) => {
-                const hasChildren = item.children && item.children.length > 0;
-                const isOpen = activeDropdown === item.label;
+                <div className="flex flex-col justify-center select-none">
+                  <span className="text-sm sm:text-base lg:text-[17px] font-extrabold tracking-tight text-navy leading-none group-hover:text-primary transition-colors">
+                    HASWAKARYA
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.14em] uppercase text-sky-800 leading-tight mt-1 whitespace-nowrap">
+                    Crew Manning Agency
+                  </span>
+                </div>
+              </Link>
 
-                if (!hasChildren) {
+              {/* Desktop Navigation Menu: Sitting closely & comfortably beside the logo */}
+              <nav
+                className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 shrink-0"
+                aria-label="Main Navigation"
+              >
+                {NAV_MENU_ITEMS.map((item: NavMenuItem) => {
+                  const hasChildren = item.children && item.children.length > 0;
+                  const isOpen = activeDropdown === item.label;
+
+                  if (!hasChildren) {
+                    return (
+                      <Link
+                        key={item.label}
+                        href={resolveNavHref(item.href, pathname)}
+                        className="px-1.5 xl:px-2 2xl:px-2.5 py-1.5 text-[11px] xl:text-xs 2xl:text-sm font-semibold text-navy hover:text-primary transition-colors rounded-md hover:bg-slate-50 whitespace-nowrap"
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  }
+
                   return (
-                    <Link
+                    <div
                       key={item.label}
-                      href={resolveNavHref(item.href, pathname)}
-                      className="px-1.5 xl:px-2 2xl:px-2.5 py-1.5 text-[11px] xl:text-xs 2xl:text-sm font-semibold text-navy hover:text-primary transition-colors rounded-md hover:bg-slate-50 whitespace-nowrap"
+                      className="relative shrink-0"
+                      onMouseEnter={() => handleMouseEnter(item.label)}
+                      onMouseLeave={handleMouseLeave}
                     >
-                      {item.label}
-                    </Link>
-                  );
-                }
-
-                return (
-                  <div
-                    key={item.label}
-                    className="relative shrink-0"
-                    onMouseEnter={() => handleMouseEnter(item.label)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleDropdownClick(item.label)}
-                      className={`inline-flex items-center gap-0.5 xl:gap-1 px-1.5 xl:px-2 2xl:px-2.5 py-1.5 text-[11px] xl:text-xs 2xl:text-sm font-semibold rounded-md transition-colors whitespace-nowrap ${
-                        isOpen
-                          ? "text-primary bg-ice/40"
-                          : "text-navy hover:text-primary hover:bg-slate-50"
-                      }`}
-                      aria-expanded={isOpen}
-                      aria-haspopup="true"
-                    >
-                      <span className="whitespace-nowrap">{item.label}</span>
-                      <ChevronDown
-                        className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 shrink-0 ${
-                          isOpen ? "rotate-180 text-primary" : "text-slate-400"
+                      <button
+                        type="button"
+                        onClick={() => handleDropdownClick(item.label)}
+                        className={`inline-flex items-center gap-0.5 xl:gap-1 px-1.5 xl:px-2 2xl:px-2.5 py-1.5 text-[11px] xl:text-xs 2xl:text-sm font-semibold rounded-md transition-colors whitespace-nowrap ${
+                          isOpen
+                            ? "text-primary bg-ice/40"
+                            : "text-navy hover:text-primary hover:bg-slate-50"
                         }`}
-                      />
-                    </button>
+                        aria-expanded={isOpen}
+                        aria-haspopup="true"
+                      >
+                        <span className="whitespace-nowrap">{item.label}</span>
+                        <ChevronDown
+                          className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 shrink-0 ${
+                            isOpen ? "rotate-180 text-primary" : "text-slate-400"
+                          }`}
+                        />
+                      </button>
 
-                    {/* Dropdown Panel */}
-                    {isOpen && (
-                      <div className="absolute top-full left-0 w-80 bg-white rounded-xl shadow-2xl border border-border-light py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                        <div className="px-3 py-1.5 border-b border-slate-100 mb-1 flex items-center justify-between">
-                          <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
-                            {item.label}
-                          </span>
-                          <span className="text-[10px] text-primary font-semibold">
-                            Haswakarya
-                          </span>
+                      {/* Dropdown Panel */}
+                      {isOpen && (
+                        <div className="absolute top-full left-0 w-80 bg-white rounded-xl shadow-2xl border border-border-light py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                          <div className="px-3 py-1.5 border-b border-slate-100 mb-1 flex items-center justify-between">
+                            <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                              {item.label}
+                            </span>
+                            <span className="text-[10px] text-primary font-semibold">
+                              Haswakarya
+                            </span>
+                          </div>
+                          <div className="py-1">
+                            {item.children?.map((sub) => (
+                              <Link
+                                key={sub.label}
+                                href={resolveNavHref(sub.href, pathname)}
+                                onClick={() => setActiveDropdown(null)}
+                                className="block px-4 py-2.5 hover:bg-ice/25 transition-colors border-l-2 border-transparent hover:border-primary group"
+                              >
+                                <div className="text-xs font-semibold text-navy group-hover:text-primary flex items-center justify-between">
+                                  <span>{sub.label}</span>
+                                  <ArrowRight className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
+                                </div>
+                                {sub.description && (
+                                  <p className="text-[11px] text-muted line-clamp-1 mt-0.5">
+                                    {sub.description}
+                                  </p>
+                                )}
+                              </Link>
+                            ))}
+                          </div>
                         </div>
-                        <div className="py-1">
-                          {item.children?.map((sub) => (
-                            <Link
-                              key={sub.label}
-                              href={resolveNavHref(sub.href, pathname)}
-                              onClick={() => setActiveDropdown(null)}
-                              className="block px-4 py-2.5 hover:bg-ice/25 transition-colors border-l-2 border-transparent hover:border-primary group"
-                            >
-                              <div className="text-xs font-semibold text-navy group-hover:text-primary flex items-center justify-between">
-                                <span>{sub.label}</span>
-                                <ArrowRight className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
-                              </div>
-                              {sub.description && (
-                                <p className="text-[11px] text-muted line-clamp-1 mt-0.5">
-                                  {sub.description}
-                                </p>
-                              )}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </nav>
+                      )}
+                    </div>
+                  );
+                })}
+              </nav>
+            </div>
 
             {/* Right Side Actions: Cleanly proportioned, zero overlapping */}
             <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-2.5 shrink-0 flex-nowrap">

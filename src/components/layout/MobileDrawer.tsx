@@ -110,15 +110,23 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-light bg-surface/80">
-          <Link href={resolveNavHref("#hero", pathname)} onClick={handleLinkClick} className="flex items-center gap-2">
-            <div className="relative w-36 h-11">
+          <Link href={resolveNavHref("#hero", pathname)} onClick={handleLinkClick} className="flex items-center gap-2.5">
+            <div className="relative w-9 h-9 shrink-0">
               <Image
                 src="/images/logo-haswakarya.png"
-                alt="Haswakarya Crew Agency"
+                alt="Haswakarya Logo"
                 fill
-                sizes="150px"
-                className="object-contain object-left"
+                sizes="36px"
+                className="object-contain"
               />
+            </div>
+            <div className="flex flex-col justify-center select-none">
+              <span className="text-sm font-extrabold tracking-tight text-navy leading-none">
+                HASWAKARYA
+              </span>
+              <span className="text-[9px] font-bold tracking-[0.14em] uppercase text-sky-800 leading-tight mt-0.5">
+                Crew Manning Agency
+              </span>
             </div>
           </Link>
           <button
