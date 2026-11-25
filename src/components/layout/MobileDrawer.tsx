@@ -19,6 +19,7 @@ import {
   Users,
   Ship,
   ArrowRight,
+  Download,
 } from "lucide-react";
 import { COMPANY_INFO, NAV_MENU_ITEMS, NavMenuItem, QUICK_SEARCH_INDEX } from "@/data/haswakarya-data";
 import { resolveNavHref } from "@/lib/navigation/anchors";
@@ -285,8 +286,25 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
             </>
           )}
 
-          {/* Quick Direct Communication Buttons */}
+          {/* Quick Direct Communication Buttons & PWA Action */}
           <div className="pt-4 mt-4 border-t border-border-light space-y-2">
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("haswakarya:prompt-pwa-install"));
+                }
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#06122A] text-white font-semibold text-xs rounded-lg shadow-sm hover:bg-[#0c2b52] active:scale-98 transition cursor-pointer"
+            >
+              <Download className="w-4 h-4 text-amber-400" />
+              <span>Instal Aplikasi H-COS (PWA)</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 ml-auto">
+                App
+              </span>
+            </button>
+
             <a
               href={COMPANY_INFO.whatsappUrl}
               target="_blank"
@@ -299,11 +317,11 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
             </a>
 
             <a
-              href={`tel:${COMPANY_INFO.headOfficeStructured.fax?.replace(/[^0-9+]/g, "") || "+62778326066"}`}
+              href={`tel:${COMPANY_INFO.whatsappClean}`}
               className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-navy text-white font-semibold text-xs rounded-lg hover:bg-navy/90 transition"
             >
-              <Printer className="w-4 h-4 text-ice" />
-              <span>Batam Fax: {COMPANY_INFO.fax}</span>
+              <Phone className="w-4 h-4 text-ice" />
+              <span>Batam Operations: {COMPANY_INFO.phoneWhatsApp}</span>
             </a>
 
             <a

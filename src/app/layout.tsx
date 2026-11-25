@@ -3,6 +3,7 @@ import { Roboto } from 'next/font/google';
 import './globals.css';
 import { COMPANY_INFO } from '@/data/haswakarya-data';
 import { resolveSiteUrl } from '@/lib/seo/siteUrl';
+import { PwaRegister } from '@/components/pwa/PwaRegister';
 
 // Satuan identitas kanonik untuk metadata dan JSON-LD.
 const SITE_URL = resolveSiteUrl();
@@ -231,6 +232,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${roboto.variable} font-sans antialiased text-navy bg-white selection:bg-primary selection:text-white`}>
+        <PwaRegister />
         {children}
       </body>
     </html>

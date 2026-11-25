@@ -19,6 +19,7 @@ import {
   ScrollText,
   KeyRound,
   X,
+  Download,
 } from 'lucide-react';
 
 export interface PortalSidebarProps {
@@ -165,8 +166,27 @@ export function PortalSidebar({ open = false, onClose }: PortalSidebarProps) {
         })}
 
         <div className="pt-5 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-          Portal Eksternal
+          Portal Eksternal &amp; Aplikasi
         </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            onClose?.();
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('haswakarya:prompt-pwa-install'));
+            }
+          }}
+          className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition-colors group cursor-pointer text-left"
+        >
+          <span className="flex items-center gap-2.5">
+            <Download className="w-4 h-4 text-amber-600 shrink-0" />
+            <span className="truncate">Instal Aplikasi (PWA)</span>
+          </span>
+          <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-200/60 text-amber-900">
+            H-COS
+          </span>
+        </button>
 
         <Link
           href="/share/vetting/demo"
